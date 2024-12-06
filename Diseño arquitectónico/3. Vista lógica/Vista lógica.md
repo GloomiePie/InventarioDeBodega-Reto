@@ -44,7 +44,5 @@ Un diagrama de clases sigue la siguiente estructura:
 ## [Enlace al diccionario de clases](https://utpl-my.sharepoint.com/:x:/g/personal/hlchuquimarca_utpl_edu_ec/Ef4Q6vqcT6ZIkBWhR8b88AsBFVgr6-DH5vroV6cvmuYZhQ?e=caQLEj)
 
 ## Foto del diagrama
+![Inventario de Bodega-Diagrama de clases drawio (1)](https://github.com/user-attachments/assets/fbf1e943-869e-4328-b429-6b50d38689bb)
 
-<p align="center">
-  <img src="https://i.postimg.cc/vHw4YfG2/Inventario-de-Bodega-Diagrama-de-clases.png" alt="Diagrama de clases"/>
-</p>
