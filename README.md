@@ -42,7 +42,6 @@ Desarrollar un **aplicativo móvil** para gestionar el inventario de la bodega d
   <div align="center">
   <img src="https://i.postimg.cc/15TSMK2v/qr.png" alt="qr" width="300"/>
   </div>
-
   
 ## Tecnologías y Herramientas
 
