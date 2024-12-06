@@ -76,7 +76,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
 
 ## 2. Diagrama de caso de uso (Aprovisionamiento)
-![Inventario de Bodega-Caso de Uso 2 drawio (1)](https://github.com/user-attachments/assets/4e680a67-8fa9-49f7-9d38-8b8c264c31ae)
+![Inventario de Bodega-Caso de Uso 2 drawio](https://github.com/user-attachments/assets/31d6f855-a289-4c0c-96b6-c85114e3184c)
 
  ## Descripción del segundo caso de uso: Aprovisionamiento
 
@@ -92,7 +92,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Nombre*           | Solicitar Componentes                      |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Usuario (Comprador, Responsable de aprovisionamiento).    |
-| *Flujo normal*     | 1. Usuario identifica los materiales necesarios según las políticas de inventario. <br>2. Usuario elabora los pedidos de los componentes requeridos.<br>3. Usuario controla las órdenes pendientes para garantizar entregas a tiempo. <br>4. Usuario confirma la recepción de los componentes solicitados.|
+| *Flujo normal*     | 1. Usuario identifica los componentes necesarios según las políticas de inventario. <br>2. Usuario elabora los pedidos de los componentes requeridos.<br>3. Usuario controla las órdenes pendientes para garantizar entregas a tiempo. <br>4. Usuario confirma la recepción de los componentes solicitados.|
 
  ### Caso: Recibir Componentes
 
@@ -103,7 +103,8 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
 ## 3. Diagrama de caso de uso (Almacenamiento)
 
-![Inventario de Bodega-Caso de Uso 3 drawio](https://github.com/user-attachments/assets/e6014ee9-b27a-4978-b688-44ff9d7993f9)
+![Inventario de Bodega-Caso de Uso 3 drawio](https://github.com/user-attachments/assets/112868ea-8c21-4fdb-9d4c-ec9b0603ecf8)
+
 
  ## Descripción del tercer caso de uso: Almacenamiento
 
@@ -116,10 +117,10 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
  ### Caso: Organizar los Productos 
 
-| *Nombre*           | Organizar los Productos                                     |
+| *Nombre*           | Organizar los Componentes                                    |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Encargado de almacén.     |
-| *Flujo normal*     | 1. Encargado de almacén etiqueta y codifica los productos para facilitar su identificación. <br>2. Encargado de almacén clasifica los productos según el sistema de categorización definido.<br>3. Encargado de almacén organiza los productos priorizando aquellos con mayor demanda o rotación. |
+| *Flujo normal*     | 1. Encargado de almacén etiqueta y codifica los componentes para facilitar su identificación. <br>2. Encargado de almacén clasifica los componentes según el sistema de categorización definido.<br>3. Encargado de almacén organiza los componentes priorizando aquellos con mayor demanda o rotación. |
 
 
  ### Caso: Controlar las Condiciones del Almacén
