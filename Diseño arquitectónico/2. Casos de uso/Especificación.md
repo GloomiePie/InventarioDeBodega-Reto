@@ -76,7 +76,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
 
 ## 2. Diagrama de caso de uso (Aprovisionamiento)
-![Inventario de Bodega-Caso de Uso 2 drawio](https://github.com/user-attachments/assets/f6040192-3efa-4673-bfd5-0a3afd76bb5d)
+![Inventario de Bodega-Caso de Uso 2 drawio (1)](https://github.com/user-attachments/assets/4e680a67-8fa9-49f7-9d38-8b8c264c31ae)
 
  ## Descripción del segundo caso de uso: Aprovisionamiento
 
