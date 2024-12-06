@@ -130,8 +130,8 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Flujo normal*     | 1. Responsable de almacén monitorea la temperatura y la humedad para garantizar condiciones adecuadas. <br>2. Responsable de almacén supervisa las medidas de seguridad contra robos, incendios u otros riesgos.<br>3. Responsable de almacén realiza inspecciones periódicas para identificar y corregir posibles problemas. |
  
 ## 4. Diagrama de caso de uso (Gestión operativa)
-![Inventario de Bodega-Caso de uso 4 drawio](https://github.com/user-attachments/assets/015fed12-152a-447e-aeaa-a72307b126b2)
 
+![Inventario de Bodega-Caso de uso 4 drawio (1)](https://github.com/user-attachments/assets/c12b6cc5-2f93-499e-acbc-ef1f084fef57)
 
 ## Descripción del tercer caso de uso: Gestión operativa
 
@@ -139,7 +139,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
 | *Nombre*           | Ingresar Usuario                    |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | Personal administrativo.<br>- BD UTPL.   |
+| *Actores*          | - Personal administrativo.<br>- BD UTPL.   |
 | *Flujo normal*     | 1. El personal administrativo ingresa sus credenciales a BD UTPL. <br>2. BD UTPL valida las credenciales del personal administrativo. |
 
 
