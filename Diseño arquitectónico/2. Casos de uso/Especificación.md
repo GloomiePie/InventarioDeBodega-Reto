@@ -85,21 +85,21 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Nombre*           | Seleccionar Proveedores                          |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Usuario (Comprador, Responsable de aprovisionamiento).     |
-| *Flujo normal*     | 1. Usuario investiga las opciones de proveedores disponibles. <br>2. Usuario evalúa a los proveedores según criterios de calidad, precio y cumplimiento.<br>3. Usuario negocia contratos con los proveedores seleccionados. <br>4. Usuarios homologa los proveedores aprobados para formalizar su relación comercial.|
+| *Flujo normal*     | 1. Usuario investiga las opciones de proveedores disponibles. <br>2. Usuario evalúa a los proveedores según criterios de calidad, precio y cumplimiento.<br>3. Usuario negocia contratos con los proveedores seleccionados. <br>4. Usuario homológa los proveedores aprobados para formalizar su relación comercial.|
 
- ### Caso: Solicitar los Materiales 
+ ### Caso: Solicitar Componentes 
 
-| *Nombre*           | Solicitar los Materiales                          |
+| *Nombre*           | Solicitar Componentes                      |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Usuario (Comprador, Responsable de aprovisionamiento).    |
-| *Flujo normal*     | 1. Usuario identifica los materiales necesarios según las políticas de inventario. <br>2. Usuario elabora los pedidos de los materiales requeridos.<br>3. Usuario controla las órdenes pendientes para garantizar entregas a tiempo. <br>4. Usuario confirma la recepción de los materiales solicitados.|
+| *Flujo normal*     | 1. Usuario identifica los materiales necesarios según las políticas de inventario. <br>2. Usuario elabora los pedidos de los componentes requeridos.<br>3. Usuario controla las órdenes pendientes para garantizar entregas a tiempo. <br>4. Usuario confirma la recepción de los componentes solicitados.|
 
- ### Caso: Recibir los Materiales 
+ ### Caso: Recibir Componentes
 
-| *Nombre*           | Recibir los Materiales                          |
+| *Nombre*           | Recibir Componentes                          |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | Usuario (Comprador, Responsable de aprovisionamiento).     |
-| *Flujo normal*     | 1. Usuario verifica físicamente los materiales recibidos contra los pedidos realizados.<br>2. Usuario inspecciona los bienes para garantizar su calidad y cantidad.<br>3. Usuario registra las entradas de los bienes al inventario.<br>4. Usuario reporta cualquier discrepancia o daño identificado.|
+| *Actores*          | - Usuario (Comprador, Responsable de aprovisionamiento).<br> - Inventario   |
+| *Flujo normal*     | 1. Usuario verifica físicamente los componentes recibidos contra los pedidos realizados.<br>2. Usuario inspecciona los componentes para garantizar su calidad y cantidad.<br>3. Usuario registra las entradas de los componentes al Inventario.<br>4. Usuario reporta cualquier discrepancia o daño identificado.|
 
 ## 3. Diagrama de caso de uso (Almacenamiento)
 
