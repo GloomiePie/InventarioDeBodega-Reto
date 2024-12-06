@@ -68,7 +68,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Actores*          | Gerente de inventarios.   |
 | *Flujo normal*     | 1. Gerente de inventarios selecciona la estrategia más adecuada (FIFO, LIFO, JIT).<br>2. Gerente de inventarios define los parámetros de seguridad del stock para evitar rupturas.<br>3. Gerente de inventarios establece las políticas de reabastecimiento, incluyendo periodicidad y puntos de reorden.|
 
-### Caso: Clasificar los Productos
+### Caso: Clasificar los Componentes
 | *Nombre*           | Clasificar los Componentes       |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Gerente de inventarios.   |
@@ -115,7 +115,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Actores*          | Encargado de almacén.     |
 | *Flujo normal*     | 1. Encargado de almacén analiza el espacio disponible en el almacén.<br>2. Encargado de almacén optimiza el diseño del espacio para maximizar la capacidad.<br>3. Encargado de almacén diseña los flujos logísticos para facilitar el acceso y la distribución.<br>4. Encargado de almacén define las ubicaciones específicas para almacenar cada tipo de componente.|
 
- ### Caso: Organizar los Productos 
+ ### Caso: Organizar los Componentes 
 
 | *Nombre*           | Organizar los Componentes                                    |
 |-----------------------|-------------------------------------------------|
@@ -149,21 +149,21 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Nombre*           | Monitorear las Existencias         |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Coordinador de operaciones de inventario    |
-| *Flujo normal*     | 1. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>2. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>3. Coordinador de operaciones de inventario realiza auditorías regulares para verificar discrepancias.<br>4. Coordinador de operaciones de inventario actualiza los registros con los cambios identificados.<br>5. Coordinador de operaciones de inventario controla los productos obsoletos o caducados.|
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>2. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>3. Coordinador de operaciones de inventario realiza auditorías regulares para verificar discrepancias.<br>4. Coordinador de operaciones de inventario actualiza los registros con los cambios identificados.<br>5. Coordinador de operaciones de inventario controla los componentes obsoletos o caducados.|
 
 ### Caso: Reabastecer los Componentes
 
 | *Nombre*           | Reabastecer los Componentes         |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Coordinador de operaciones de inventario    |
-| *Flujo normal*     | 1. Coordinador de operaciones de inventario identifica productos que alcanzan el punto de reorden.<br>2. Coordinador de operaciones de inventario activa las órdenes de compra para reabastecer dichos productos.<br>3. Coordinador de operaciones de inventario calcula el stock de seguridad necesario según la demanda actual.|
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario identifica componentes que alcanzan el punto de reorden.<br>2. Coordinador de operaciones de inventario activa las órdenes de compra para reabastecer dichos componentes.<br>3. Coordinador de operaciones de inventario calcula el stock de seguridad necesario según la demanda actual.|
 
 ### Caso: Gestionar las Discrepancias
 
 | *Nombre*           | Gestionar las Discrepancias         |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Coordinador de operaciones de inventario    |
-| *Flujo normal*     | 1. Coordinador de operaciones de inventario detecta faltantes, excedentes o daños en los productos.<br>2. Coordinador de operaciones de inventario analiza las causas de las discrepancias.<br>3. Coordinador de operaciones de inventario implementa soluciones correctivas, como ajustes en pedidos o devoluciones.|
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario detecta faltantes, excedentes o daños en los componentess.<br>2. Coordinador de operaciones de inventario analiza las causas de las discrepancias.<br>3. Coordinador de operaciones de inventario implementa soluciones correctivas, como ajustes en pedidos o devoluciones.|
 
 ## 5. Diagrama de caso de uso (Análisis y mejora continua)
 ![Inventario de Bodega-Caso de uso 5 drawio](https://github.com/user-attachments/assets/a4df9576-b718-44ae-8a88-cdda5e209845)
