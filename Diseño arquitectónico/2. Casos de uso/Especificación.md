@@ -56,19 +56,23 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
 ## Descripción del caso del primer uso: Planificación del Inventario
 
-### Caso: Ingresar usuarios
-
-| *Nombre*           | Ingresar Usuario|
+### Caso: Definir los objetivos
+| *Nombre*           | Definir los objetivos|
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo<br>- BD UTPL       |
-| *Flujo normal*     | 1. El personal administrativo ingresa sus credenciales a UTPL.<br>2. UTPL valida las credenciales del personal administrativo.<br>|
+| *Actores*          | - Gerente de inventarios. |
+| *Flujo normal*     | 1. Gerente de inventarios analiza las necesidades de la organización.<br>2. Gerente de inventarios define la demanda del inventario basada en la proyección de necesidades.<br>3. Gerente de inventarios establece los niveles óptimos del inventario considerando la demanda.<br>4. Gerente de inventarios determina los recursos financieros y operativos requeridos para cumplir con los objetivos.|
 
-### Caso: Ingresar Componentes
-
-| *Nombre*           | Ingresar Componentes                                       |
+### Caso: Establecer Políticas de Inventario
+| *Nombre*           | Establecer Políticas de Inventario        |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo<br>- Inventario      |
-| *Flujo normal*     | 1. El personal administrativo ingresa un componente al inventario.<br>2. El inventario valida la existencia del componente.<br>3. El inventario guarda el componente. |
+| *Actores*          | - Gerente de inventarios.   |
+| *Flujo normal*     | 1. Gerente de inventarios selecciona la estrategia más adecuada (FIFO, LIFO, JIT).<br>2. Gerente de inventarios define los parámetros de seguridad del stock para evitar rupturas.<br>3. Gerente de inventarios establece las políticas de reabastecimiento, incluyendo periodicidad y puntos de reorden.|
+
+### Caso: Clasificar los Productos
+| *Nombre*           | Clasificar los Componentes       |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Gerente de inventarios.   |
+| *Flujo normal*     | 1. Gerente de inventarios realiza el análisis ABC para clasificar los componentes según su valor y demanda.<br>2. Gerente de inventarios identifica los componentes críticos que requieren atención prioritaria.<br>3. Responsable de inventarios categoriza los componentes según su rotación (alta, media, baja).|
 
 
 ## 2. Diagrama de caso de uso (Aprovisionamiento)
@@ -76,20 +80,26 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
  ## Descripción del segundo caso de uso: Aprovisionamiento
 
- ### Caso: Gestionar Inventario
+ ### Caso: Seleccionar Proveedores
 
-| *Nombre*           | Gestionar Inventario                                       |
+| *Nombre*           | Seleccionar Proveedores                          |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo<br>- BD Inventario      |
-| *Flujo normal*     | 1. Personal administrativo verifica la existencia del componente. <br>2. El inventario valida la existencia del componente.<br>3. Personal administrativo verifica el estado del componente. <br>4. El inventario actualiza el estado del componente. |
+| *Actores*          | - Usuario (Comprador, Responsable de aprovisionamiento).     |
+| *Flujo normal*     | 1. Usuario investiga las opciones de proveedores disponibles. <br>2. Usuario evalúa a los proveedores según criterios de calidad, precio y cumplimiento.<br>3. Usuario negocia contratos con los proveedores seleccionados. <br>4. Usuarios homologa los proveedores aprobados para formalizar su relación comercial.|
 
- ### Caso: Clasificar Componentes 
+ ### Caso: Solicitar los Materiales 
 
-| *Nombre*           | Clasificar Componentes                                       |
+| *Nombre*           | Solicitar los Materiales                          |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo      |
-| *Flujo normal*     | 1. Personal administrativo clasifica los componentes según su tipo. <br>2. El inventario muestra los componentes por tipo. |
+| *Actores*          | - Usuario (Comprador, Responsable de aprovisionamiento).    |
+| *Flujo normal*     | 1. Usuario identifica los materiales necesarios según las políticas de inventario. <br>2. Usuario elabora los pedidos de los materiales requeridos.<br>3. Usuario controla las órdenes pendientes para garantizar entregas a tiempo. <br>4. Usuario confirma la recepción de los materiales solicitados.|
 
+ ### Caso: Recibir los Materiales 
+
+| *Nombre*           | Recibir los Materiales                          |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Usuario (Comprador, Responsable de aprovisionamiento).     |
+| *Flujo normal*     | 1. Usuario verifica físicamente los materiales recibidos contra los pedidos realizados.<br>2. Usuario inspecciona los bienes para garantizar su calidad y cantidad.<br>3. Usuario registra las entradas de los bienes al inventario.<br>4. Usuario reporta cualquier discrepancia o daño identificado.|
 
 ## 3. Diagrama de caso de uso (Almacenamiento)
 
@@ -97,27 +107,27 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
  ## Descripción del tercer caso de uso: Almacenamiento
 
- ### Caso: Generar informe del Componente 
+ ### Caso:Diseñar el Almacén
 
-| *Nombre*           | Generar informe del Componente                                       |
+| *Nombre*           | Diseñar el Almacén                         |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo     |
-| *Flujo normal*     | 1. El inventario notifica irregularidad del componente. <br>2. Inventario genera informe del componente.<br>3. El personal administrativo revisa el informe. |
+| *Actores*          | - Encargado de almacén.     |
+| *Flujo normal*     | 1. Encargado de almacén analiza el espacio disponible en el almacén.<br>2. Encargado de almacén optimiza el diseño del espacio para maximizar la capacidad.<br>3. Encargado de almacén diseña los flujos logísticos para facilitar el acceso y la distribución.<br>4. Encargado de almacén define las ubicaciones específicas para almacenar cada tipo de componente.|
 
- ### Caso: Generar alertas 
+ ### Caso: Organizar los Productos 
 
-| *Nombre*           | Generar alertas                                       |
+| *Nombre*           | Organizar los Productos                                     |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo     |
-| *Flujo normal*     | 1. Personal administrativo verifica la existencia del componente. <br>2. El inventario valida la existencia del componente.<br>3. Personal administrativo verifica el estado del componente. <br>4. El inventario actualiza el estado del componente. |
+| *Actores*          | - Encargado de almacén.     |
+| *Flujo normal*     | 1. Encargado de almacén etiqueta y codifica los productos para facilitar su identificación. <br>2. Encargado de almacén clasifica los productos según el sistema de categorización definido.<br>3. Encargado de almacén organiza los productos priorizando aquellos con mayor demanda o rotación. |
 
 
- ### Caso: Monitorear movimientos del componente 
+ ### Caso: Controlar las Condiciones del Almacén
 
-| *Nombre*           | Monitorear movimientos del componente                                     |
+| *Nombre*           | Controlar las Condiciones del Almacén                               |
 |-----------------------|-------------------------------------------------|
-| *Actores*          | - Personal administrativo     |
-| *Flujo normal*     | 1. El inventario notifica los ingresos de los componentes.  <br>2. El personal administrativo monitorea los ingresos de los componentes. <br>3. El inventario notifica los egresos de los componentes.  <br>4. El personal administrativo monitorea los egresos de los componentes  |
+| *Actores*          | - Encargado de almacén.    |
+| *Flujo normal*     | 1. Responsable de almacén monitorea la temperatura y la humedad para garantizar condiciones adecuadas. <br>2. Responsable de almacén supervisa las medidas de seguridad contra robos, incendios u otros riesgos.<br>3. Responsable de almacén realiza inspecciones periódicas para identificar y corregir posibles problemas. |
  
 ## 4. Diagrama de caso de uso (Gestión operativa)
 ![Inventario de Bodega-Caso de uso 4 drawio](https://github.com/user-attachments/assets/015fed12-152a-447e-aeaa-a72307b126b2)
@@ -125,10 +135,58 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 
 ## Descripción del tercer caso de uso: Gestión operativa
 
+### Caso: Ingresar Usuario
 
+| *Nombre*           | Ingresar Usuario                    |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Personal administrativo.<br>- BD UTPL.   |
+| *Flujo normal*     | 1. El personal administrativo ingresa sus credenciales a BD UTPL. <br>2. BD UTPL valida las credenciales del personal administrativo. |
+
+
+### Caso: Monitorear las Existencias
+
+| *Nombre*           | Monitorear las Existencias         |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Coordinador de operaciones de inventario    |
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>2. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>3. Coordinador de operaciones de inventario realiza auditorías regulares para verificar discrepancias.<br>4. Coordinador de operaciones de inventario actualiza los registros con los cambios identificados.<br>5. Coordinador de operaciones de inventario controla los productos obsoletos o caducados.|
+
+### Caso: Reabastecer los Componentes
+
+| *Nombre*           | Reabastecer los Componentes         |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Coordinador de operaciones de inventario    |
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario identifica productos que alcanzan el punto de reorden.<br>2. Coordinador de operaciones de inventario activa las órdenes de compra para reabastecer dichos productos.<br>3. Coordinador de operaciones de inventario calcula el stock de seguridad necesario según la demanda actual.|
+
+### Caso: Gestionar las Discrepancias
+
+| *Nombre*           | Gestionar las Discrepancias         |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Coordinador de operaciones de inventario    |
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario detecta faltantes, excedentes o daños en los productos.<br>2. Coordinador de operaciones de inventario analiza las causas de las discrepancias.<br>3. Coordinador de operaciones de inventario implementa soluciones correctivas, como ajustes en pedidos o devoluciones.|
 
 ## 5. Diagrama de caso de uso (Análisis y mejora continua)
 ![Inventario de Bodega-Caso de uso 5 drawio](https://github.com/user-attachments/assets/a4df9576-b718-44ae-8a88-cdda5e209845)
 
-
 ## Descripción del tercer caso de uso: Análisis y mejora continua
+
+### Caso: Evaluar el Desempeño
+
+| *Nombre*           | Evaluar el Desempeño        |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Usuario(Analista de inventario, Gerente de mejora contiuna)    |
+| *Flujo normal*     | 1. Usuario recolecta datos sobre el desempeño del inventario.<br>2. Usuario calcula indicadores clave como rotación, exactitud y tiempos de reabastecimiento.<br>3. Usuario compara los resultados obtenidos con las metas establecidas.|
+
+
+### Caso: Optimizar los Procesos
+
+| *Nombre*           | Optimizar los Procesos       |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Usuario(Analista de inventario, Gerente de mejora contiuna)    |
+| *Flujo normal*     | 1. Usuario identifica áreas de oportunidad para optimización.<br>2. Usuario continua implementa tecnologías o metodologías para mejorar los procesos.<br>3. Usuario capacita al personal en las nuevas prácticas implementadas.|
+
+### Caso: Documentar y Retroalimentar el Proceso
+
+| *Nombre*           | Documentar y Retroalimentar el Proceso       |
+|-----------------------|-------------------------------------------------|
+| *Actores*          | - Usuario(Analista de inventario, Gerente de mejora contiuna)    |
+| *Flujo normal*     | 1. Usuario registra las lecciones aprendidas durante el ciclo operativo.<br>2. Usuario desarrolla informes con recomendaciones específicas.<br>3. Usuario implementa ajustes basados en las observaciones del análisis.|
