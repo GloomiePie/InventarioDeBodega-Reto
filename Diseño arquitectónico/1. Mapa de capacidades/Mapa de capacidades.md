@@ -65,40 +65,40 @@ El módulo de **Almacenamiento** gestiona la organización y conservación de lo
 3. **Controlar condiciones**
    -Supervisar temperatura, humedad y medidas de seguridad.
 
-   
+## Gestión Operativa
 
-
-
-## Monitoreo
-
-El módulo de **Monitoreo** permite supervisar continuamente el estado del inventario y generar notificaciones para prevenir problemas relacionados con la falta de materiales o irregularidades en los mismos.
+El módulo de **Monitoreo** se encarga de la fase de control
 
 ### Funcionalidades principales:
-1. **Generar informe del componente**  
-   Proporciona detalles sobre el estado y la cantidad de los componentes en el sistema.  
-   - Notificar irregularidad del componente: Identifica problemas o inconsistencias en los componentes registrados.  
-
-2. **Generar alertas**  
-   Ayuda a anticiparse a posibles inconvenientes mediante notificaciones automáticas.  
-   - Alertar cantidad mínima del componente: Informa cuando el stock de un componente alcanza niveles críticos.  
+1. **Gestión de inventario**  
+   Valida el uso de inventario.  
+   - Monitorea existencias y detecta obsolescencias.
+2. **Reabastecimiento**  
+   Gestiona órdenes de compra  
+   - Ajusta estrategias de suministro.  
    - Alertar estado del componente: Notifica sobre el deterioro o mal estado de un componente.  
 
-3. **Monitorear movimientos del componente**  
-   Lleva un registro detallado de las entradas y salidas de los componentes del inventario.  
-   - Notificar ingreso del componente  
-   - Notificar egreso del componente  
+3. **Gestión de excedentes**  
+   Resuelve discrepancias con respecto a las entradas y salidas de los componentes del inventario.  
+   - Maneja excedentes  
+   - Trata sobre los componentes obsoletos  
 
 Este módulo permite una supervisión proactiva, facilitando una respuesta rápida ante problemas.
 
 
 
-## Ejecución
+## Análisis y mejora continua 
 
-El módulo de **Ejecución** es responsable de atender las solicitudes de componentes y garantizar que los materiales sean entregados de manera eficiente.
-
+El módulo de **Análisis y mejora continua** se centra en evaluar el rendimiento y aplicar mejora continua
 ### Funcionalidades principales:
-1. **Solicitar componentes**  
-   Permite a los usuarios gestionar solicitudes de materiales según las necesidades operativas.  
-   - Gestionar solicitudes de componentes: Procesa y organiza las solicitudes para una entrega oportuna.  
+1. **Evaluar indicadores**  
+   Analizar KPIs
+   - Realizar comparaciones con estándares establecidos.
+2. **Identificar áreas de mejora**
+   - Documentar procesos ineficientes
+   - Realizar capacitaciones necesarias
+3. **Optimizar procesos**
+   - Implementar observaciones en caso de ser necesario para posteriormente realizar mejoras
+   - Integrar lecciones aprendidas en la dirección estratégica
 
 Este módulo asegura que los materiales estén disponibles para su uso cuando se necesiten y que las solicitudes sean atendidas eficientemente.
