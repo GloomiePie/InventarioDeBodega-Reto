@@ -93,7 +93,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
 | *Nombre*           | Monitorear las Existencias         |
 |-----------------------|-------------------------------------------------|
 | *Actores*          | Coordinador de operaciones de inventario    |
-| *Flujo normal*     | 1. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>2. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>3. Coordinador de operaciones de inventario realiza auditorías regulares para verificar discrepancias.<br>4. Coordinador de operaciones de inventario actualiza los registros con los cambios identificados.<br>5. Coordinador de operaciones de inventario controla los componentes obsoletos o caducados.|
+| *Flujo normal*     | 1. Coordinador de operaciones de inventario revisa los niveles actuales de existencias.<br>2. Coordinador de operaciones de inventario realiza auditorías regulares para verificar discrepancias.<br>3. Coordinador de operaciones de inventario actualiza los registros con los cambios identificados.<br>4. Coordinador de operaciones de inventario controla los componentes obsoletos o caducados.|
 
 ### Caso: Reabastecer los Componentes
 
