@@ -84,7 +84,7 @@ La estructura de un diagrama de casos de uso incluye los siguientes componentes 
  
 ## 3. Diagrama de caso de uso (Gestión operativa)
 
-![Inventario de Bodega-Caso de uso 3](https://github.com/user-attachments/assets/4d3fb4c9-d5b9-4de3-84d3-9ebe333c9cf3)
+![Inventario de Bodega-Caso de uso 3](https://github.com/user-attachments/assets/8ce262b8-f06d-4220-b08e-851849f2a0db)
 
 ## Descripción del tercer caso de uso: Gestión operativa
 
