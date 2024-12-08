@@ -38,6 +38,6 @@ Ejemplo: Un cliente puede tener una relación de "realiza" con varias órdenes e
 
 
 <p align="center">
-  <img src="https://i.postimg.cc/WzqVPFJG/Inventario-de-Bodega-Modelo-de-Datos-drawio.png" alt="Modelo de datos"/>
+  <img src="https://i.postimg.cc/sXbhd9yk/Inventario-de-Bodega-Modelo-de-Datos-drawio.png"/>
 </p>
 
