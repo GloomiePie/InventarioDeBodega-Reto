@@ -36,8 +36,7 @@ Ejemplo: Un cliente puede tener una relación de "realiza" con varias órdenes e
 - **Modelo lógico**: Especifica estructuras detalladas como tablas y columnas.
 - **Modelo físico**: Implementación en un sistema de base de datos específico.
 
-
 <p align="center">
-  <img src="https://i.postimg.cc/sXbhd9yk/Inventario-de-Bodega-Modelo-de-Datos-drawio.png"/>
+  <img src="https://github.com/user-attachments/assets/84aa1fe8-7b2b-4427-b2db-9939aa5ded67"/>
 </p>
 
