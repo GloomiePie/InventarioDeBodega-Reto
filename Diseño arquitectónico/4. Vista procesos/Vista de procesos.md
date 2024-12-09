@@ -56,17 +56,6 @@ Aquí se describe el proceso de monitoreo de movimientos e irregularidades en el
 
 ---
 
-### Diagrama 4: Gestión de solicitudes y actualización de componentes
-![Inventario de Bodega-Diagrama de secuencia 4 drawio](https://github.com/user-attachments/assets/a2dd3f99-f089-476f-ad54-290d43ace38b)
-
-
-**Explicación**:  
-Este diagrama explica cómo el **Servicio Checklist** interactúa con el inventario para procesar solicitudes. Las principales acciones incluyen:  
-- Validar la disponibilidad de los componentes solicitados.  
-- Actualizar las cantidades en el inventario.  
-- Confirmar el estado final de la solicitud tras el procesamiento.
-
----
 
 # Diagramas de Robustez  
 
