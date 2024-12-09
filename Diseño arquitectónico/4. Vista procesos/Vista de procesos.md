@@ -16,8 +16,8 @@ Los diagramas de secuencia son una herramienta de modelado en la Ingeniería de 
 
 ## Diagramas de secuencia
 
-### Diagrama 1: Inicio de sesión y gestión de componentes
-![Inventario de Bodega-Diagrama de secuencia 1 drawio](https://github.com/user-attachments/assets/ae2158de-bd25-46cf-8ea0-b3853ff16c10)
+### Diagrama 1: Aprovisionamiento
+![Inventario de Bodega-Diagrama de secuencia 1 drawio](https://github.com/user-attachments/assets/ef6486fb-6702-49cd-a118-038f2e49e122)
 
 
 **Explicación**:  
@@ -28,8 +28,9 @@ Este diagrama describe cómo el **Personal Administrativo** inicia sesión en el
 
 ---
 
-### Diagrama 2: Verificación y clasificación de componentes
-![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/aee24bb0-3027-43b4-b5a2-a46fa9386ef4)
+
+### Diagrama 2: Almacenamiento
+![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/7751790c-d558-4224-8053-c5020e6d9e83)
 
 
 
@@ -41,8 +42,10 @@ Este diagrama muestra el proceso de verificación y clasificación de componente
 
 ---
 
-### Diagrama 3: Generación de informes y alertas
-![Inventario de Bodega-Diagrama de secuencia 3 drawio](https://github.com/user-attachments/assets/e7f20d35-ce42-48ee-8b8e-e374eb61370d)
+
+### Diagrama 3: Gestión operativa
+![Inventario de Bodega-Diagrama de secuencia 3 drawio](https://github.com/user-attachments/assets/bd7b7788-9d55-4882-a518-0a8f3e12de2b)
+
 
 
 **Explicación**:  
@@ -53,17 +56,6 @@ Aquí se describe el proceso de monitoreo de movimientos e irregularidades en el
 
 ---
 
-### Diagrama 4: Gestión de solicitudes y actualización de componentes
-![Inventario de Bodega-Diagrama de secuencia 4 drawio](https://github.com/user-attachments/assets/a2dd3f99-f089-476f-ad54-290d43ace38b)
-
-
-**Explicación**:  
-Este diagrama explica cómo el **Servicio Checklist** interactúa con el inventario para procesar solicitudes. Las principales acciones incluyen:  
-- Validar la disponibilidad de los componentes solicitados.  
-- Actualizar las cantidades en el inventario.  
-- Confirmar el estado final de la solicitud tras el procesamiento.
-
----
 
 # Diagramas de Robustez  
 
@@ -79,15 +71,15 @@ Los diagramas de robustez son una herramienta de modelado utilizada en el diseñ
 
 ## Diagramas de robustez
 
-### Diagrama 1: Inicio de sesión y gestión de componentes
-![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/1d78dbe3-2859-45e6-918f-410d7b27be62)
+### Diagrama 1: Aprovisionamiento
+![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/81e0c8ca-ff9c-4b24-9abd-ca5da66e5828)
 
-### Diagrama 2: Verificación y clasificación de componentes
-![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/93c36c2c-98f6-4578-b30a-88d3d5a321fa)
+### Diagrama 2: Almacenamiento
+![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/d1f65e24-0965-4366-8194-43ac4aad17d7)
 
-### Diagrama 3: Generación de informes y alertas
-![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/e0169cb3-08bb-431d-ae48-144674d0ee1c)
+### Diagrama 3: Gestión operativa
+![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/0f8570a0-490f-4397-ad9a-e42b610f3d10)
 
-### Diagrama 4: Gestión de solicitudes y actualización de componentes
-![Inventario de Bodega-Diagrama de robustez 4 drawio](https://github.com/user-attachments/assets/37a85346-2805-42dc-901c-bd3941a37bb4)
+
+
 
