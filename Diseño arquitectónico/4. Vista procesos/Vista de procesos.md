@@ -30,7 +30,8 @@ Este diagrama describe cómo el **Personal Administrativo** inicia sesión en el
 
 
 ### Diagrama 2: Almacenamiento
-![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/021c56ac-2b1b-4e04-b26d-7cb942a5b3c4)
+![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/01a7af4a-eb07-4dc8-ad66-3c6fb6180ecd)
+
 
 
 **Explicación**:  
@@ -43,7 +44,8 @@ Este diagrama muestra el proceso de verificación y clasificación de componente
 
 
 ### Diagrama 3: Gestión operativa
-![Inventario de Bodega-Diagrama de secuencia 3 drawio](https://github.com/user-attachments/assets/bd7b7788-9d55-4882-a518-0a8f3e12de2b)
+![Inventario de Bodega-Diagrama de secuencia 3 drawio](https://github.com/user-attachments/assets/af11bca1-320f-456f-a379-25a57bd4dd6c)
+
 
 
 
@@ -71,13 +73,16 @@ Los diagramas de robustez son una herramienta de modelado utilizada en el diseñ
 ## Diagramas de robustez
 
 ### Diagrama 1: Aprovisionamiento
-![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/81e0c8ca-ff9c-4b24-9abd-ca5da66e5828)
+![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/f270c5c4-ed97-4b44-90f5-5b8a6ee18f0a)
+
 
 ### Diagrama 2: Almacenamiento
-![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/d1f65e24-0965-4366-8194-43ac4aad17d7)
+![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/b9d66fad-b7ad-4eaf-8e34-f7b9511ae43a)
+
 
 ### Diagrama 3: Gestión operativa
-![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/0f8570a0-490f-4397-ad9a-e42b610f3d10)
+![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/dc08d012-7815-4988-9d27-7f7b1413c752)
+
 
 
 
