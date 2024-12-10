@@ -14,7 +14,7 @@ Un **Mapa de Capacidades** es una herramienta visual que ayuda a estructurar y d
 Un mapa de capacidades generalmente se divide en módulos o áreas de alto nivel que representan conjuntos de funcionalidades interrelacionadas. Cada módulo tiene una serie de subfunciones o componentes que especifican en mayor detalle las capacidades que el sistema debe proporcionar. Estos módulos suelen estar organizados de manera jerárquica y permiten a los desarrolladores, diseñadores y stakeholders entender el alcance de las funcionalidades de la aplicación.
 
 ## Mapa de Capacidades de la Aplicación de Gestión de Inventario de Bodega
-![Mapa de Capacidades](https://github.com/user-attachments/assets/4fdeb705-1267-4573-98a1-1c0a738bf384)
+![Mapa de Capacidades](https://github.com/user-attachments/assets/cbb86ef9-e7da-41d9-bae5-5040e628e2a8)
 
 
 
