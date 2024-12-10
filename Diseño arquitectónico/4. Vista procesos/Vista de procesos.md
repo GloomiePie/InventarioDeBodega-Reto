@@ -17,7 +17,7 @@ Los diagramas de secuencia son una herramienta de modelado en la Ingeniería de 
 ## Diagramas de secuencia
 
 ### Diagrama 1: Aprovisionamiento
-![Inventario de Bodega-Diagrama de secuencia 1 drawio](https://github.com/user-attachments/assets/ef6486fb-6702-49cd-a118-038f2e49e122)
+![Inventario de Bodega-Diagrama de secuencia 1 drawio](https://github.com/user-attachments/assets/f4d0f833-9459-4bf9-a03c-a9f59466a55c)
 
 
 **Explicación**:  
@@ -30,8 +30,7 @@ Este diagrama describe cómo el **Personal Administrativo** inicia sesión en el
 
 
 ### Diagrama 2: Almacenamiento
-![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/7751790c-d558-4224-8053-c5020e6d9e83)
-
+![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/021c56ac-2b1b-4e04-b26d-7cb942a5b3c4)
 
 
 **Explicación**:  
