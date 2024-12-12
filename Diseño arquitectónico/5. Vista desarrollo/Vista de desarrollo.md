@@ -1,3 +1,7 @@
+<p align="right">
+  <img src="https://i.postimg.cc/13qQdqZs/utpllogo.png" alt="Logo UTPL" width="150"/>
+</p>
+
 # CI/CD y DevOps
 
 ## ¿Qué es CI/CD?
