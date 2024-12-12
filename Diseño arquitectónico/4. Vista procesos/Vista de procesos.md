@@ -76,15 +76,17 @@ Los diagramas de robustez son una herramienta de modelado utilizada en el diseñ
 ## Diagramas de robustez
 
 ### Diagrama 1: Aprovisionamiento
-![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/f270c5c4-ed97-4b44-90f5-5b8a6ee18f0a)
+![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/62ce5534-b5ef-4ac9-b71d-daedec34edad)
+
 
 
 ### Diagrama 2: Almacenamiento
-![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/b9d66fad-b7ad-4eaf-8e34-f7b9511ae43a)
+![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/2a9b153b-42b2-4ee8-9c59-5a76540e7bca)
+
 
 
 ### Diagrama 3: Gestión operativa
-![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/dc08d012-7815-4988-9d27-7f7b1413c752)
+![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/85673d76-401f-4fcc-98b6-f56383a36529)
 
 
 
