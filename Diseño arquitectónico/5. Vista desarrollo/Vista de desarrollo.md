@@ -40,7 +40,7 @@ El enfoque CI/CD fomenta ciclos de desarrollo cortos, iterativos y más seguros.
 
 ## Tabla de descripción 
 
-| **Fase**     | **Plataformas**    | **Descripción**                                                                                                                                                              |
+| **Fase DevOps**     | **Plataformas**    | **Descripción**                                                                                                                                                              |
 |--------------|--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Plan**     | GitHub             | Se utilizará para gestionar el desarrollo colaborativo, organizar tareas mediante branches                                                                                |
 |              | Trello             | Se empleará para el seguimiento de tareas y actualizaciones del estado de los incidentes detectados.                                                                      |
