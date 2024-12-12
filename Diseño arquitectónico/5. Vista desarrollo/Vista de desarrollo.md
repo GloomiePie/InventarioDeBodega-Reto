@@ -52,7 +52,7 @@ El enfoque CI/CD fomenta ciclos de desarrollo cortos, iterativos y más seguros.
 |              | JUnit              | Se utilizará para realizar pruebas unitarias automatizadas                                                                                                                |
 | **Release**  | Fastify            | Permite preparar la aplicación para su lanzamiento mediante la configuración de rutas y middleware, asegurando que todos los endpoints estén listos para ser utilizados en producción |
 | **Deploy**   | Firebase Hosting   | Permite implementar el backend sin preocuparse por la infraestructura subyacente, asegurando una alta disponibilidad y escalabilidad del sistema de gestión de inventario  |
-|              | Cloud Functions    |                                                                                                                                                                          |
+|              | Cloud Functions    |  Permite implementar el backend sin preocuparse por la infraestructura subyacente, asegurando una alta disponibilidad y escalabilidad del sistema de gestión de inventario  |
 |              | Google Play Store  | Se utilizará como plataforma para publicar y distribuir la aplicación móvil                                                                                              |
 | **Operate**  | WSO2               | Ayudará a gestionar, publicar, monitorear y asegurar APIs, facilitando el control y la gobernanza de interfaces de comunicación.                                          |
 | **Monitor**  | Discord            | Se utilizará para la comunicación en tiempo real y notificaciones de eventos relevantes                                                                                  |
