@@ -35,6 +35,5 @@ Ejemplo: Un cliente puede tener una relación de "realiza" con varias órdenes e
 - **Modelo lógico**: Especifica estructuras detalladas como tablas y columnas.
 - **Modelo físico**: Implementación en un sistema de base de datos específico.
 
-![Inventario de Bodega-Modelo de Datos drawio](https://github.com/user-attachments/assets/124310ae-24de-404a-b5bb-f3afc9cc41b8)
-
+![Inventario de Bodega-Modelo de Datos](https://github.com/user-attachments/assets/d3085944-be3d-45d6-b988-677af9949ef6)
 
