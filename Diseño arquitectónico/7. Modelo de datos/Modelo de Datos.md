@@ -4,7 +4,6 @@
 
 # Modelo de Datos
 
-
 ## ¿Qué es un modelo de datos?
 Un **modelo de datos** es una representación estructurada que define cómo se organizan, almacenan y manipulan los datos dentro de un sistema o base de datos. Es un diseño conceptual que describe:
 - **Entidades**: Objetos o conceptos del mundo real, como "Clientes", "Productos" o "Órdenes".
@@ -36,5 +35,6 @@ Ejemplo: Un cliente puede tener una relación de "realiza" con varias órdenes e
 - **Modelo lógico**: Especifica estructuras detalladas como tablas y columnas.
 - **Modelo físico**: Implementación en un sistema de base de datos específico.
 
-![Inventario de Bodega-Modelo de Datos](https://github.com/user-attachments/assets/35bba8f4-2b9c-449c-92d8-4a183590a02d)
+![Inventario de Bodega-Modelo de Datos drawio](https://github.com/user-attachments/assets/124310ae-24de-404a-b5bb-f3afc9cc41b8)
+
 
