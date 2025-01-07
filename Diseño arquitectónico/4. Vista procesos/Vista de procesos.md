@@ -17,7 +17,8 @@ Los diagramas de secuencia son una herramienta de modelado en la Ingeniería de 
 ## Diagramas de secuencia
 
 ### Diagrama 1: Aprovisionamiento
-![Inventario de Bodega-Diagrama de secuencia 1 drawio](https://github.com/user-attachments/assets/f4d0f833-9459-4bf9-a03c-a9f59466a55c)
+![Inventario de Bodega-Diagrama de secuencia 1 drawio](https://github.com/user-attachments/assets/c1edc20c-b91e-436c-b8f2-6c6be12d4827)
+
 
 
 **Explicación**:  
@@ -30,7 +31,9 @@ Este diagrama describe cómo el **Personal Administrativo** inicia sesión en el
 
 
 ### Diagrama 2: Almacenamiento
-![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/021c56ac-2b1b-4e04-b26d-7cb942a5b3c4)
+![Inventario de Bodega-Diagrama de secuencia 2 drawio](https://github.com/user-attachments/assets/52dcd13f-cc53-4325-b53b-c3f22d20648b)
+
+
 
 
 **Explicación**:  
@@ -43,7 +46,9 @@ Este diagrama muestra el proceso de verificación y clasificación de componente
 
 
 ### Diagrama 3: Gestión operativa
-![Inventario de Bodega-Diagrama de secuencia 3 drawio](https://github.com/user-attachments/assets/bd7b7788-9d55-4882-a518-0a8f3e12de2b)
+![Inventario de Bodega-Diagrama de secuencia 3 drawio](https://github.com/user-attachments/assets/0a2eac5c-e12e-4d5a-b1fe-4af5116d16d7)
+
+
 
 
 
@@ -71,13 +76,18 @@ Los diagramas de robustez son una herramienta de modelado utilizada en el diseñ
 ## Diagramas de robustez
 
 ### Diagrama 1: Aprovisionamiento
-![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/81e0c8ca-ff9c-4b24-9abd-ca5da66e5828)
+![Inventario de Bodega-Diagrama de robustez 1 drawio](https://github.com/user-attachments/assets/62ce5534-b5ef-4ac9-b71d-daedec34edad)
+
+
 
 ### Diagrama 2: Almacenamiento
-![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/d1f65e24-0965-4366-8194-43ac4aad17d7)
+![Inventario de Bodega-Diagrama de robustez 2 drawio](https://github.com/user-attachments/assets/2a9b153b-42b2-4ee8-9c59-5a76540e7bca)
+
+
 
 ### Diagrama 3: Gestión operativa
-![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/0f8570a0-490f-4397-ad9a-e42b610f3d10)
+![Inventario de Bodega-Diagrama de robustez 3 drawio](https://github.com/user-attachments/assets/85673d76-401f-4fcc-98b6-f56383a36529)
+
 
 
 
