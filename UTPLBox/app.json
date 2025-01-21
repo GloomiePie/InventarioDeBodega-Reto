@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "UTPLBox",
+    "displayName": "UTPLBox",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-camera"
+    ]
+  }
+}
