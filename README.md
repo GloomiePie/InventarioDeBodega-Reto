@@ -4,10 +4,8 @@
 
 <p align="center"><strong>CLOUDCORE</strong></p>
 
-<div align="center">
-  <img src="https://i.postimg.cc/HnFLxdF8/pixelcut-export.png" alt="React Logo" width="200"/>
-</div>
-  
+![pixelcut-export](https://github.com/user-attachments/assets/e80f329e-1997-4f6e-a1cc-0ba2f07aa53b)
+
 ## ¿Quiénes Somos?
 
 CLOUDCORE es una empresa especializada en soluciones de computación en la nube, orientada a mejorar la eficiencia y competitividad de sus clientes a través de tecnologías seguras y escalables.
