@@ -7,17 +7,17 @@ import { Calendar } from 'react-native-calendars';
 import { Feather } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import dayjs from 'dayjs';
 
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get("window");
 
 export default function AuditCalendar() {
     const [addAuditModalVisible, setAddAuditModalVisible] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState<string>(dayjs().format('DD/MM/YYYY'));
     const [auditsForSelectedDate, setAuditsForSelectedDate] = useState<Audit[]>([]);
     const [markedDates, setMarkedDates] = useState<{ [key: string]: any }>({});
     const [modalVisible, setModalVisible] = useState(false);
@@ -25,21 +25,18 @@ export default function AuditCalendar() {
     const [slideAnim] = useState(new Animated.Value(0));
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
-    const formatDate = (date: string) => date.replace(/-/g, '/');
-
-
-
     const showDatePicker = () => setDatePickerVisible(true);
 
     const handleDateChange = (_: any, selectedDate?: Date) => {
-        setDatePickerVisible(false); // Cierra el selector
+        setDatePickerVisible(false);
+
         if (selectedDate) {
-            setNewAudit({ ...newAudit, date: selectedDate.toISOString().split('T')[0] }); // Actualiza la fecha
+            const formattedDate = dayjs(selectedDate).format('DD/MM/YYYY');
+            setNewAudit({ ...newAudit, date: formattedDate });
         }
     };
 
-    // Agrega un nuevo estado local para "AM/PM"
-    const [timePeriod, setTimePeriod] = useState<'AM' | 'PM'>('AM');
+
 
     // Función para manejar la selección de "AM" o "PM"
     const handleTimePeriodChange = (type: 'startPeriod' | 'endPeriod', period: 'AM' | 'PM') => {
@@ -64,7 +61,7 @@ export default function AuditCalendar() {
     }
 
     const [newAudit, setNewAudit] = useState<NewAudit>({
-        date: '',
+        date: dayjs().format('DD/MM/YYYY'), // Fecha inicial válida
         startTime: '',
         startPeriod: 'AM',
         endTime: '',
@@ -72,39 +69,35 @@ export default function AuditCalendar() {
         frequency: 'No repite',
     });
 
+
     const generateRecurringAudits = (baseAudit: Audit, frequency: string): Audit[] => {
         const recurringAudits: Audit[] = [];
-        const baseDate = new Date(baseAudit.date.replace(/\//g, '-'));
-        const maxIterations = 50; // Límite de repeticiones para evitar loops infinitos
+        const baseDate = dayjs(baseAudit.date, 'DD/MM/YYYY'); // Asegurarse de usar el formato DD/MM/YYYY
+        const maxIterations = 50; // Límite para evitar ciclos infinitos
 
         for (let i = 1; i <= maxIterations; i++) {
-            let newDate: Date | null = null;
+            let newDate;
 
             switch (frequency) {
                 case 'Diariamente':
-                    newDate = new Date(baseDate);
-                    newDate.setDate(baseDate.getDate() + i);
+                    newDate = baseDate.add(i, 'day');
                     break;
-
                 case 'Semanalmente':
-                    newDate = new Date(baseDate);
-                    newDate.setDate(baseDate.getDate() + i * 7);
+                    newDate = baseDate.add(i, 'week');
                     break;
-
                 case 'Mensualmente':
-                    newDate = new Date(baseDate);
-                    newDate.setMonth(baseDate.getMonth() + i);
+                    newDate = baseDate.add(i, 'month');
                     break;
-
                 default:
-                    return recurringAudits; // No repite
+                    return recurringAudits; // Si no hay frecuencia, devuelve solo la base
             }
 
             if (newDate) {
+                const formattedDate = newDate.format('DD/MM/YYYY'); // Formatear la fecha como DD/MM/YYYY
                 const newAudit = {
                     ...baseAudit,
-                    id: `${baseAudit.id}-${i}`,
-                    date: newDate.toISOString().split('T')[0].replace(/-/g, '/'),
+                    id: `${baseAudit.id}-${i}`, // Asignar un nuevo ID único
+                    date: formattedDate, // Asignar la nueva fecha
                 };
                 recurringAudits.push(newAudit);
             }
@@ -114,9 +107,23 @@ export default function AuditCalendar() {
     };
 
 
+    // Función para guardar las auditorías en AsyncStorage
+    const saveAuditsToStorage = async (audits: Audit[]) => {
+        try {
+            const jsonValue = JSON.stringify(audits);
+            await AsyncStorage.setItem('audits', jsonValue);
+        } catch (e) {
+            console.error('Error saving audits to storage', e);
+        }
+    };
 
-    const handleAddAudit = () => {
-        if (!newAudit.date || !newAudit.startTime || !newAudit.endTime || !newAudit.frequency) {
+    const handleAddAudit = async () => {
+        if (!dayjs(newAudit.date, 'DD/MM/YYYY', true).isValid()) {
+            Alert.alert('La fecha seleccionada no es válida.');
+            return;
+        }
+
+        if (!newAudit.startTime || !newAudit.endTime || !newAudit.frequency) {
             Alert.alert('Debes completar todos los campos para agendar una auditoría.');
             return;
         }
@@ -126,71 +133,75 @@ export default function AuditCalendar() {
             return;
         }
 
-
-        // Formatear horas
-        const formattedStartTime = `${newAudit.startTime} ${newAudit.startPeriod}`;
-        const formattedEndTime = `${newAudit.endTime} ${newAudit.endPeriod}`;
-
-        // Crear auditoría base
         const baseAudit: Audit = {
             id: (audits.length + 1).toString(),
             title: 'Auditoría Programada',
-            date: newAudit.date.replace(/-/g, '/'),
-            startTime: formattedStartTime,
-            endTime: formattedEndTime,
+            date: newAudit.date,
+            startTime: `${newAudit.startTime} ${newAudit.startPeriod}`,
+            endTime: `${newAudit.endTime} ${newAudit.endPeriod}`,
         };
 
-        // Generar auditorías recurrentes si aplica
         let allAudits = [baseAudit];
         if (newAudit.frequency !== 'No repite') {
             const recurringAudits = generateRecurringAudits(baseAudit, newAudit.frequency);
             allAudits = [...allAudits, ...recurringAudits];
         }
 
-        // Actualizar estado con todas las auditorías
-        setAudits((prevAudits) => [...prevAudits, ...allAudits]);
+        const updatedAudits = [...audits, ...allAudits];
+
+        console.log('Auditorías antes de guardar:', updatedAudits);
+        setAudits(updatedAudits);
+        await saveAuditsToStorage(updatedAudits);
+
+
+
         setAuditsForSelectedDate(getAuditsByDate(newAudit.date));
         initializeMarkedDates();
         closeAddAuditModal();
 
+
+
         setTimeout(() => {
-            setSelectedAudit(baseAudit); // Asegura que el audit se seleccione antes
+            setSelectedAudit(baseAudit);
             setTimeout(() => {
-                setModalVisible(true); // Luego muestra el modal
+                setModalVisible(true);
             }, 300);
         }, 300);
-
     };
 
 
-
     const [audits, setAudits] = useState<Audit[]>([
-        { id: '1', title: 'Auditoría Programada', date: '2025/01/12', startTime: '9:00 am', endTime: '10:00 am' },
-        { id: '2', title: 'Auditoría Programada', date: '2025/01/12', startTime: '10:00 am', endTime: '12:00 pm' },
-        { id: '3', title: 'Auditoría Programada', date: '2024/12/19', startTime: '3:00 pm', endTime: '5:00 pm' },
-        { id: '4', title: 'Auditoría Programada', date: '2025/01/07', startTime: '4:00 pm', endTime: '7:00 pm' },
+        
     ]);
-
 
     const initializeMarkedDates = () => {
         const datesWithAudits: { [key: string]: any } = {};
         audits.forEach(audit => {
-            const auditDate = audit.date.replace(/\//g, '-'); // Convertir al formato esperado (yyyy-MM-dd)
+            const auditDate = dayjs(audit.date, 'DD/MM/YYYY').format('YYYY-MM-DD');
             datesWithAudits[auditDate] = { marked: true, dotColor: '#f2b705' };
         });
         setMarkedDates({
             ...datesWithAudits,
-            [selectedDate]: { ...datesWithAudits[selectedDate], selected: true, selectedColor: '#004270' },
+            [dayjs(selectedDate, 'DD/MM/YYYY').format('YYYY-MM-DD')]: {
+                selected: true,
+                selectedColor: '#004270',
+            },
         });
     };
 
+
     const handleDayPress = (day: { dateString: string }) => {
-        setSelectedDate(day.dateString); // Actualizar fecha seleccionada
-        const filteredAudits = getAuditsByDate(day.dateString); // Obtener auditorías para ese día
-        setAuditsForSelectedDate(filteredAudits); // Actualizar auditorías mostradas
+        const formattedDate = dayjs(day.dateString, 'YYYY-MM-DD').format('DD/MM/YYYY');
+        setSelectedDate(formattedDate);
+        const filteredAudits = getAuditsByDate(formattedDate);
+        setAuditsForSelectedDate(filteredAudits);
         setMarkedDates({
             ...markedDates,
-            [day.dateString]: { ...markedDates[day.dateString], selected: true, selectedColor: '#004270' },
+            [day.dateString]: {
+                ...markedDates[day.dateString],
+                selected: true,
+                selectedColor: '#004270',
+            },
         });
     };
 
@@ -223,7 +234,7 @@ export default function AuditCalendar() {
     };
 
     const getAuditsByDate = (date: string) => {
-        return audits.filter(audit => audit.date === formatDate(date));
+        return audits.filter(audit => audit.date === date);
     };
 
     useEffect(() => {
@@ -276,7 +287,7 @@ export default function AuditCalendar() {
 
             </View>
             <Calendar
-                current={selectedDate}
+                current={dayjs(selectedDate, 'DD/MM/YYYY').format('YYYY-MM-DD')}
                 onDayPress={handleDayPress}
                 markedDates={markedDates}
                 style={styles.calendar}
@@ -314,16 +325,7 @@ export default function AuditCalendar() {
                 <Animated.View
                     style={[
                         styles.modalContent,
-                        {
-                            transform: [
-                                {
-                                    translateY: slideAnim.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [500, 0], // Animación de abajo hacia arriba
-                                    }),
-                                },
-                            ],
-                        },
+
                     ]}
                 >
                     <View style={styles.modalBody}>
@@ -331,12 +333,14 @@ export default function AuditCalendar() {
                         <View style={styles.datePickerContainer}>
                             <Text style={styles.modalText}>Fecha:</Text>
                             <TouchableOpacity style={styles.dateButton} onPress={showDatePicker}>
-                                <Text style={styles.dateButtonText}>{newAudit.date || 'Seleccionar fecha'}</Text>
+                                <Text style={styles.dateButtonText}>
+                                    {newAudit.date || 'Seleccionar fecha'}
+                                </Text>
                             </TouchableOpacity>
                         </View>
                         {isDatePickerVisible && (
                             <DateTimePicker
-                                value={new Date()}
+                                value={newAudit.date ? dayjs(newAudit.date, 'DD/MM/YYYY').toDate() : new Date()}
                                 mode="date"
                                 display="default"
                                 onChange={handleDateChange}
@@ -438,82 +442,29 @@ export default function AuditCalendar() {
                     </View>
 
                 </Animated.View>
-                <Modal transparent={true} visible={modalVisible} animationType="none">
-                    <TouchableOpacity
-                        style={styles.overlay2}
-                        activeOpacity={1}
-                        onPress={closeModal}>
-                        <TouchableWithoutFeedback>
-                            <Animated.View
-                                style={[
-                                    styles.modalContent2,
-                                    {
-                                        transform: [
-                                            {
-                                                translateY: slideAnim.interpolate({
-                                                    inputRange: [0, 1],
-                                                    outputRange: [500, 0], // Desliza desde abajo hacia arriba
-                                                }),
-                                            },
-                                        ],
-                                    },
-                                ]}
-                            >
-                                <View style={styles.modalBody}>
-                                    <Feather name="alert-circle" size={50} color="#004270" />
-                                    <Text style={styles.modalTitle}>¡Auditoría Agendada!</Text>
-                                    {selectedAudit && (
-                                        <>
-                                            <Text style={styles.modalText}>Fecha: {selectedAudit.date}</Text>
-                                            <Text style={styles.modalText}>Hora: {selectedAudit.startTime} a {selectedAudit.endTime}</Text>
-                                        </>
-                                    )}
-                                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                                        <Text style={styles.closeButtonText}>Aceptar</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </Animated.View>
-                        </TouchableWithoutFeedback>
-                    </TouchableOpacity>
-                </Modal>
-
             </Modal>
-
-
-
-
             {/* Ventana emergente */}
-            <Modal transparent={true} visible={modalVisible} animationType="none">
+            <Modal transparent={true} visible={modalVisible} animationType="fade">
                 <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={closeModal}>
-                    <Animated.View
-                        style={[
-                            styles.modalContent,
-                            {
-                                transform: [
-                                    {
-                                        translateY: slideAnim.interpolate({
-                                            inputRange: [0, 1],
-                                            outputRange: [500, 0], // Desliza desde abajo hacia arriba
-                                        }),
-                                    },
-                                ],
-                            },
-                        ]}
-                    >
-                        <View style={styles.modalBody2}>
-                            <Text style={styles.modalTitle2}>¡AUDITORIA PROGRAMADA!</Text>
-                            <Feather name="alert-circle" size={50} color="#004270" style={styles.modalIcon} />
-                            {selectedAudit && (
-                                <>
-                                    <Text style={styles.modalText}>Fecha Programada: {selectedAudit.date}</Text>
-                                    <Text style={styles.modalText}>Hora Programada: {selectedAudit.startTime} a {selectedAudit.endTime}</Text>
-                                </>
-                            )}
-                            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-                                <Text style={styles.closeButtonText}>Aceptar</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Animated.View>
+                    <View style={styles.modalBody2}>
+                        <Text style={styles.modalTitle2}>¡AUDITORIA PROGRAMADA!</Text>
+                        <Feather name="alert-circle" size={50} color="#004270" style={styles.modalIcon} />
+                        {selectedAudit && (
+                            <>
+                                <Text style={styles.modalText}>
+                                    Fecha Programada: {dayjs(selectedAudit.date, 'DD/MM/YYYY').isValid()
+                                        ? selectedAudit.date
+                                        : 'Fecha inválida'}
+                                </Text>
+                                <Text style={styles.modalText}>
+                                    Hora Programada: {selectedAudit.startTime} - {selectedAudit.endTime}
+                                </Text>
+                            </>
+                        )}
+                        <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                            <Text style={styles.closeButtonText}>Aceptar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </TouchableOpacity>
             </Modal>
         </View>
@@ -586,7 +537,7 @@ const styles = StyleSheet.create({
     addButton: {
         borderRadius: 25,
         textAlignVertical: 'center',
-        marginLeft: 30,
+        marginLeft: 10,
         marginBottom: 7,
     },
     addButtonText2: {
@@ -603,7 +554,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         height: height,
         zIndex: 1,
-        
+
     },
     overlay: {
         flex: 1,

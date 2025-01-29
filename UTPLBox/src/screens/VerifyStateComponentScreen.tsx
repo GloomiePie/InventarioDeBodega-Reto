@@ -9,7 +9,8 @@ import {
     Alert,
     FlatList,
     Image,
-    Modal
+    Modal,
+    Dimensions
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -21,6 +22,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
+const { width, height } = Dimensions.get("window");
+
 // Define el tipo de parámetros del Drawer Navigator
 type DrawerParamList = {
     Home: undefined;
@@ -30,6 +33,19 @@ type DrawerParamList = {
     StateScanner: undefined;
 };
 
+export type Componente = {
+    id: string;
+    nombre: string;
+    cantidad: number;
+    limite: number;
+    estado: 'Perfecto Estado' | 'Buen Estado (Usado)' | 'Defectuoso' | 'Obsoleto';
+    codigo?: string;
+    fecha: string;
+    hora: string;
+    descripcion: string;
+    image: string;
+};
+
 // Tipar el hook de navegación
 type NavigationProps = DrawerNavigationProp<DrawerParamList>;
 
@@ -37,21 +53,24 @@ export function AddComponentScreen() {
     const navigation = useNavigation<NavigationProps>();
 
     // Estados para los datos del formulario
-    const { barcode, setBarcode } = useBarcode();
-    const [quantity, setQuantity] = useState(10);
-    const [componentName] = useState('');
+    const { barcode, setBarcode, agregarComponenteVerificado } = useBarcode();
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [selectedInventoryType, setSelectedInventoryType] = useState<string | null>(null);
-    const [inventoryType, setInventoryType] = useState<string | undefined>(undefined);
     const [description, setDescription] = useState('');
     const [modalVisible, setModalVisible] = useState(false); // Estado para controlar la visibilidad del modal
+    const [selectedImages, setSelectedImages] = useState<string[]>([]); // Almacena hasta 3 imágenes
+    const [selectedImage] = useState<string | null>(null);
+
+    const [imageModalVisible, setImageModalVisible] = useState(false); // Estado para el modal de agregar imágenes
+    const [verifyModalVisible, setVerifyModalVisible] = useState(false);
 
     useFocusEffect(
         useCallback(() => {
             // Restablece otros estados pero NO reinicia el código de barras
             setSelectedInventoryType(null); // Inicializa como null
             setDescription('');
-            setSelectedImage(null);
+            setSelectedImages([]);
+            closeImageModal()
 
             // Opcional: Lógica para actualizar la interfaz
             return () => {
@@ -60,12 +79,11 @@ export function AddComponentScreen() {
         }, [])
     );
 
-
-    const closeModal = () => {
-        setModalVisible(false);
-        navigation.goBack(); // Redirige al usuario después de cerrar el modal (opcional)
+    // Función para cerrar el modal de verificación
+    const closeVerifyModal = () => {
+        setVerifyModalVisible(false);
+        navigation.navigate('Home'); // Redirige al usuario después de cerrar el modal
     };
-
 
     const toggleDropdown = () => {
         setDropdownVisible(!isDropdownVisible);
@@ -76,6 +94,8 @@ export function AddComponentScreen() {
         setDropdownVisible(false);
     };
 
+
+
     const inventoryTypes = [
         "Perfecto estado",
         "Buen estado (Usado)",
@@ -83,39 +103,33 @@ export function AddComponentScreen() {
         "Obsoleto",
     ];
 
-
-    // Función para procesar los datos
-    const processBarcode = (barcode: string) => {
-        return barcode.toUpperCase();
-    };
-
-    const processDescription = (description: string) => {
-        return description.trim() || 'Sin descripción';
-    };
-
     const handleSave = () => {
         if (!barcode.trim() || !selectedInventoryType || selectedInventoryType === "Selecciona el estado del producto") {
             Alert.alert('Error', 'Seleccione el estado del componente.');
             return;
         }
 
-        const processedData = {
-            barcode: processBarcode(barcode),
-            inventoryType: selectedInventoryType,
-            description: processDescription(description),
-            image: selectedImage,
+        const componente: Componente = {
+            id: Math.random().toString(),
+            nombre: barcode,
+            cantidad: 15, // Puedes ajustar esto según sea necesario
+            limite: 10, // Puedes ajustar esto según sea necesario
+            estado: selectedInventoryType as 'Perfecto Estado' | 'Buen Estado (Usado)' | 'Defectuoso' | 'Obsoleto',
+            codigo: barcode,
+            fecha: new Date().toISOString().split('T')[0],
+            hora: new Date().toLocaleTimeString(),
+            descripcion: description,
+            image: JSON.stringify(selectedImages),
         };
 
-        console.log('Datos procesados:', processedData);
-        setModalVisible(true); // Abre el modal
+        agregarComponenteVerificado(componente);
+        setModalVisible(true);
+        console.log('Datos procesados:', componente);
     };
 
 
-
-    const [selectedImage, setSelectedImage] = useState<string | null>(null); // Estado para almacenar la imagen seleccionada
-
-    // Función para abrir la galería
-    const pickImage = async () => {
+    const pickImageFromGallery = async () => {
+        setModalVisible(false); // Cerrar el modal
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
             Alert.alert('Permiso denegado', 'Se requiere permiso para acceder a la galería');
@@ -128,10 +142,48 @@ export function AddComponentScreen() {
             quality: 1,
         });
 
-        if (!result.canceled) {
-            setSelectedImage(result.assets[0].uri); // Actualiza el estado con la URI de la imagen seleccionada
+        if (!result.canceled && result.assets[0].uri) {
+            if (selectedImages.length < 3) {
+                setSelectedImages([...selectedImages, result.assets[0].uri]);
+            }
+            console.log('Datos procesados:', result.assets[0].uri);
+        }
+
+    };
+
+    const takePhoto = async () => {
+        setModalVisible(false); // Cerrar el modal
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permiso denegado', 'Se requiere permiso para usar la cámara');
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if (!result.canceled && result.assets[0].uri) {
+            if (selectedImages.length < 3) {
+                setSelectedImages([...selectedImages, result.assets[0].uri]);
+            }
         }
     };
+
+    // Función para abrir el modal de agregar imágenes
+    const showImageOptions = () => {
+        console.log("Abriendo modal de imágenes");
+        setImageModalVisible(true);
+    };
+
+    // Función para cerrar el modal de agregar imágenes
+    const closeImageModal = () => {
+        setImageModalVisible(false);
+    };
+
+
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -143,20 +195,8 @@ export function AddComponentScreen() {
                 <Text style={styles.title2}>Verificación Estado del Componente</Text>
             </View>
 
-            {/* Formulario */}
-            <View style={styles.cont}>
-                <Text style={styles.label2}>AGREGAR EVIDENCIA EN CASO DE ENCONTRAR ALGÚN DESPERFECTO</Text>
-                <TouchableOpacity style={styles.imagePlaceholder} onPress={pickImage}>
-                    {selectedImage ? (
-                        <Image source={{ uri: selectedImage }} style={styles.image} />
-                    ) : (
-                        <MaterialCommunityIcons name="image-plus" size={100} color="#004270" />
-                    )}
-                </TouchableOpacity>
-            </View>
-
             {/* Campo de Código de Barras */}
-            <Text style={styles.label}>Código de Barras</Text>
+            <Text style={styles.label}>Buscar el componente</Text>
             <View style={styles.row}>
                 <TextInput
                     style={styles.input}
@@ -201,12 +241,51 @@ export function AddComponentScreen() {
             <TextInput
                 style={[styles.input, styles.textArea]}
                 multiline
-                numberOfLines={4}
+                numberOfLines={5}
                 value={description}
                 onChangeText={setDescription}
                 placeholder="Escriba el defecto encontrado..."
             />
-
+            <View style={styles.container2}>
+                <Text style={styles.label}>AGREGAR EVIDENCIA EN CASO DE ENCONTRAR ALGÚN DESPERFECTO</Text>
+                {selectedImages.length < 3 && (
+                    <TouchableOpacity style={styles.imagePlaceholder} onPress={showImageOptions}>
+                        <MaterialCommunityIcons name="image-plus" size={100} color="#004270" />
+                    </TouchableOpacity>
+                )}
+                <View style={styles.imagesContainer}>
+                    {selectedImages.map((uri, index) => (
+                        <Image
+                            key={index}
+                            source={{ uri }}
+                            style={styles.imagePreview}
+                        />
+                    ))}
+                </View>
+                {imageModalVisible && (
+                    <Modal
+                        transparent={true}
+                        visible={imageModalVisible}
+                        animationType="fade"
+                        onRequestClose={closeImageModal}
+                    >
+                        <View style={styles.modalOverlay2}>
+                            <TouchableOpacity
+                                style={styles.modalBackground}
+                                onPress={closeImageModal} />
+                            <View style={styles.modalContent2}>
+                                <Text style={styles.modalTitle2}>Agregar imagen</Text>
+                                <TouchableOpacity style={styles.modalButton2} onPress={takePhoto}>
+                                    <Text style={styles.modalButtonText2}>Foto</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalButton2} onPress={pickImageFromGallery}>
+                                    <Text style={styles.modalButtonText2}>Galería</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+                )}
+            </View>
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
                 <Text style={styles.saveButtonText}>Guardar cambios</Text>
             </TouchableOpacity>
@@ -215,7 +294,7 @@ export function AddComponentScreen() {
                     transparent
                     animationType="fade"
                     visible={modalVisible}
-                    onRequestClose={closeModal}
+                    onRequestClose={closeVerifyModal}
                 >
                     <View style={styles.modalOverlay}>
                         <View style={styles.modalContent}>
@@ -245,6 +324,12 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: '#fff',
     },
+    container2: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
     header2: {
         paddingTop: 50,
         flexDirection: 'row', // Alinear elementos horizontalmente
@@ -265,22 +350,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        color: '#003366',
+        color: '#004270',
     },
     label2: {
+        padding: 20,
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 8,
-        color: '#003366',
+        color: '#004270',
         textAlign: 'center'
     },
     label: {
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 8,
-        color: '#003366',
+        color: '#004270',
     },
-    imagePlaceholder: {
+    imagePlaceholder2: {
         height: 150,
         width: 150,
         borderRadius: 8,
@@ -289,6 +375,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: "28%",
         marginBottom: 16,
+    },
+    imagePlaceholder: {
+        alignSelf: 'center',
+        marginVertical: 20,
     },
     image: {
         height: '100%',
@@ -431,7 +521,63 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-
+    imagePreview: {
+        height: 80,
+        width: 80,
+        margin: 5,
+        borderRadius: 8,
+    },
+    imagesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center', // Centra las imágenes seleccionadas
+        flexWrap: 'wrap',
+        marginTop: 10,
+    },
+    modalOverlay2: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 1,
+    },
+    modalContent2: {
+        backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalTitle2: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#004270',
+    },
+    modalButton2: {
+        backgroundColor: '#004270',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalButtonText2: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
+    modalBackground: {
+        flex: 1,
+        width: width,
+        height: height
+    },
 });
 
 export default AddComponentScreen;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -7,76 +8,152 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  TextInput,
   Pressable,
   Modal,
 } from 'react-native';
 import dayjs from 'dayjs';
-import { Svg, G, Circle, Text as SvgText } from 'react-native-svg';
+import { Svg, G, Text as SvgText, Path } from 'react-native-svg';
 import { BarChart } from 'react-native-chart-kit';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Feather from '@expo/vector-icons/Feather';
 import { ScrollView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width: screenWidth, height } = Dimensions.get('window');
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
+
+const { width: screenWidth } = Dimensions.get('window');
 
 // Genera tonos de azul más oscuros en función del índice y la cantidad total de segmentos
 const generateBlueShade = (index: number, total: number) => {
-  const hue = 210; // Azul fijo en el espectro de colores HSL
-  const saturation = 60; // Saturación fija en 60%
-  const lightness = 60 - (index / total) * 50; // Luminosidad que disminuye para generar tonos más oscuros (60% a 30%)
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  const baseHue = 50; // Amarillo base
+  const saturation = 100; // Saturación completa
+  const lightness = 35 + (index / total) * 40; // Variación de luminosidad
+  return `hsl(${baseHue}, ${saturation}%, ${lightness}%)`;
 };
 
 // Estructura de eventos
 type Evento = {
   id: string;
-  titulo: string;
-  fecha: string;
-  horaInicio: string;
-  horaFin: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
 };
 
-
 const CustomCalendar: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [currentDate, setCurrentDate] = useState(dayjs()); // Fecha actual (primer día visible en la semana)
-  const [selectedDate, setSelectedDate] = useState(dayjs()); // Fecha seleccionada
-
+  const [currentDate, setCurrentDate] = useState(dayjs());
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalVisible, setModalVisible] = useState(false);
+  const [componentModalVisible, setComponentModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Evento | null>(null);
-
+  const [selectedComponente, setSelectedComponente] = useState<Componente | null>(null);
   const [hasNotifications, setHasNotifications] = useState(false);
+  const [audits, setAudits] = useState<Evento[]>([]);
 
   // Función para simular la detección de notificaciones
   const checkNotifications = () => {
-    
+
     // Aquí puedes implementar la lógica real para verificar notificaciones
     // Por ahora simulamos con un valor booleano fijo o aleatorio
     const notificationsExist = Math.random() > 0.5; // Simulación (reemplazar con lógica real)
     setHasNotifications(notificationsExist);
   };
 
-  // Efecto para comprobar notificaciones al montar el componente
-  useEffect(() => {
-    checkNotifications();
-  }, []);
+  // Cargar las auditorías al montar el componente
+useEffect(() => {
+  checkNotifications();
+  const loadAudits = async () => {
+    const storedAudits = await AsyncStorage.getItem('audits');
+    const parsedAudits = storedAudits ? JSON.parse(storedAudits) : [];
+    setAudits(parsedAudits);
+  };
+  loadAudits();
+}, []);
 
-  // Datos quemados para eventos
-  const eventos: Evento[] = [
+// Usar useFocusEffect para recargar las auditorías cuando la pantalla se enfoque
+useFocusEffect(
+  React.useCallback(() => {
+    const loadAudits = async () => {
+      try {
+        const storedAudits = await AsyncStorage.getItem('audits');
+        const parsedAudits = storedAudits ? JSON.parse(storedAudits) : [];
+        setAudits(parsedAudits);
+      } catch (e) {
+        console.error('Error al cargar auditorías desde AsyncStorage', e);
+      }
+    };
+    loadAudits();
+  }, [])
+);
+
+  // Convertir las auditorías al formato de Evento
+  const eventos: Evento[] = audits.map(audit => ({
+    date: audit.date,   // Mapear 'date' a 'fecha'
+    endTime: audit.endTime,      // Mapear 'endTime' a 'horaFin'
+    id: audit.id,
+    startTime: audit.startTime, // Mapear 'startTime' a 'horaInicio'
+    title: audit.title, // Mapear 'title' a 'titulo'
+  }));
+
+  type Componente = {
+    id: string;
+    titulo: string;
+    hora: string;
+    nombre: string;
+    codigoBarras: string;
+    horaIncidencia: string;
+    fechaIncidencia: string;
+    limite: number;
+    cantidad: number;
+  };
+
+  // Filtrar los próximos eventos
+  const proximosEventos = eventos
+    .filter((evento) => {
+      const parsedDate = dayjs(evento.date, 'DD/MM/YYYY');
+      return parsedDate.isValid() && parsedDate.isAfter(dayjs()); // Solo eventos futuros
+    })
+    .sort((a, b) =>
+      dayjs(a.date, 'DD/MM/YYYY').diff(dayjs(b.date, 'DD/MM/YYYY')) // Ordenar por fecha
+    )
+    .slice(0, 2); // Mostrar los 2 eventos más cercanos
+
+  const componentesBajos: Componente[] = [
     {
-      id: "1",
-      titulo: "Auditoría Programada",
-      fecha: "25/12/2024",
-      horaInicio: "9:00 am",
-      horaFin: "10:00 am",
+      id: '1',
+      titulo: 'Componente por debajo del Límite',
+      hora: '07:30 am',
+      nombre: 'Componente A',
+      codigoBarras: '1234567890',
+      horaIncidencia: '07:30 am',
+      fechaIncidencia: '2025-01-22',
+      limite: 50,
+      cantidad: 30,
     },
     {
-      id: "2",
-      titulo: "Auditoría Programada",
-      fecha: "01/01/2025",
-      horaInicio: "3:00 pm",
-      horaFin: "5:00 pm",
+      id: '2',
+      titulo: 'Componente por debajo del Límite',
+      hora: '07:15 am',
+      nombre: 'Componente B',
+      codigoBarras: '0987654321',
+      horaIncidencia: '07:15 am',
+      fechaIncidencia: '2025-01-25',
+      limite: 20,
+      cantidad: 15,
+    },
+    {
+      id: '3',
+      titulo: 'Componente por debajo del Límite',
+      hora: '08:00 am',
+      nombre: 'Componente C',
+      codigoBarras: '1122334455',
+      horaIncidencia: '08:00 am',
+      fechaIncidencia: '2025-01-23',
+      limite: 10,
+      cantidad: 11,
     },
   ];
 
@@ -88,16 +165,15 @@ const CustomCalendar: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   // Datos quemados para "Componentes por Tipo"
   const componentesPorTipo = [
-    { tipo: 'CPU', cantidad: 15, color: '#FF6384' },
-    { tipo: 'Monitor', cantidad: 10, color: '#36A2EB' },
+    { tipo: 'CPU', cantidad: 16, color: '#FF6384' },
+    { tipo: 'Monitor', cantidad: 9, color: '#36A2EB' },
     { tipo: 'Teclado', cantidad: 25, color: '#FFCE56' },
     { tipo: 'Mouse', cantidad: 20, color: '#4BC0C0' },
     { tipo: 'Audifonos', cantidad: 30, color: '#2f2f2f' },
   ];
 
   const totalCantidad = componentesPorTipo.reduce((sum, item) => sum + item.cantidad, 0);
-  const radius = 150;
-  const strokeWidth = 20;
+  const radius = 250;
 
   let startAngle = 0;
 
@@ -169,6 +245,34 @@ const CustomCalendar: React.FC<{ navigation: any }> = ({ navigation }) => {
     },
   };
 
+
+  const openComponentModal = (item: Componente) => {
+    setSelectedComponente(item);
+    setComponentModalVisible(true);
+  };
+
+  // Filtrar, ordenar y limitar los componentes
+  const componentesFiltrados = componentesBajos
+    .filter((componente) => componente.cantidad < componente.limite) // Filtrar por debajo del límite
+    .sort((a, b) => {
+      // Ordenar por fecha primero y luego por hora
+      const fechaA = new Date(`${a.fechaIncidencia}T${dayjs(a.horaIncidencia, 'hh:mm A').format('HH:mm:ss')}`);
+      const fechaB = new Date(`${b.fechaIncidencia}T${dayjs(b.horaIncidencia, 'hh:mm A').format('HH:mm:ss')}`);
+      return fechaA.getTime() - fechaB.getTime();
+    })
+    .slice(0, 2); // Limitar a un máximo de 2 componentes
+
+  const renderComponente = ({ item }: { item: Componente }) => (
+    <TouchableOpacity style={styles.eventCard} onPress={() => openComponentModal(item)}>
+      <View style={styles.iconContainer}>
+        <Feather name="alert-circle" size={35} color="#f2b705" />
+      </View>
+      <View style={styles.eventInfo}>
+        <Text style={styles.eventTitle}>{item.titulo}</Text>
+        <Text style={styles.eventTime}>{item.horaIncidencia}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
 
@@ -247,36 +351,32 @@ const CustomCalendar: React.FC<{ navigation: any }> = ({ navigation }) => {
       {/* Lista de eventos */}
       <Text style={styles.eventsTitle}>Próximos eventos</Text>
       <FlatList
-        data={eventos}
+        data={proximosEventos}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.eventCard}
-            onPress={() => handleEventPress(item)}
-          >
+          <TouchableOpacity style={styles.eventCard} onPress={() => handleEventPress(item)}>
             <View style={styles.iconContainer}>
-              <Feather name="alert-circle" size={35} color="#f2b705" />
+              <Feather name="calendar" size={35} color="#004B87" />
             </View>
             <View style={styles.eventInfo}>
-              <Text style={styles.eventTitle}>{item.titulo}</Text>
-              <Text style={styles.eventDate}>{item.fecha}</Text>
+              <Text style={styles.eventTitle}>{item.title}</Text>
+              <Text style={styles.eventDate}>{item.date}</Text>
               <Text style={styles.eventTime}>
-                {item.horaInicio} - {item.horaFin}
+                {item.startTime} - {item.endTime}
               </Text>
             </View>
           </TouchableOpacity>
         )}
         scrollEnabled={false}
       />
-
       {/* Modal */}
       <Modal
         visible={modalVisible}
         transparent={true}
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
+        <View style={styles.modalOverlay} >
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>¡AUDITORÍA PROGRAMADA!</Text>
             <View style={styles.iconContainer2}>
@@ -286,11 +386,11 @@ const CustomCalendar: React.FC<{ navigation: any }> = ({ navigation }) => {
               <>
                 <View style={styles.containerModalText}>
                   <Text style={styles.modalText}>
-                    Fecha Programada: {selectedEvent.fecha}
+                    Fecha Programada: {selectedEvent.date}
                   </Text>
                   <Text style={styles.modalText}>
-                    Hora Programada: {selectedEvent.horaInicio} a{" "}
-                    {selectedEvent.horaFin}
+                    Hora Programada: {selectedEvent.startTime} a{" "}
+                    {selectedEvent.endTime}
                   </Text>
                 </View>
               </>
@@ -304,66 +404,127 @@ const CustomCalendar: React.FC<{ navigation: any }> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+      <Text style={styles.eventsTitle}>Componentes Bajos</Text>
+      <FlatList
+        data={componentesFiltrados}
+        keyExtractor={(item) => item.id}
+        renderItem={renderComponente}
+        scrollEnabled={false}
+      />
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={componentModalVisible}
+        onRequestClose={() => setComponentModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>¡COMPONENTE BAJO!</Text>
+            <View style={styles.iconContainer2}>
+              <Feather name="alert-circle" size={60} color="#004270" />
+            </View>
+            {selectedComponente && (
+              <>
+                <View style={styles.containerModalText}>
+                  <Text style={styles.modalText}>Nombre del componente: {selectedComponente.nombre}</Text>
+                  <Text style={styles.modalText}>
+                    <Text style={styles.modalText}>Código de barras: </Text>
+                    {selectedComponente.codigoBarras}
+                  </Text>
+                  <Text style={styles.modalText}>
+                    <Text style={styles.modalText}>Hora de incidencia: </Text>
+                    {selectedComponente.horaIncidencia}
+                  </Text>
+                </View>
+              </>
+            )}
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setComponentModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+
+
       {/* Componentes por Tipo */}
-      <View style={styles.graphPie}>
-        <Text style={styles.sectionTitle}>Componentes por Tipo</Text>
-        <Svg width={radius * 2} height={radius * 2}>
-          <G x={radius} y={radius}>
+      <Text style={styles.sectionTitle}>Componentes por Tipo</Text>
+      <View style={[styles.graphPie, { flexDirection: 'row', alignItems: 'center' }]}>
+        {/* Gráfico de pastel reducido */}
+        <Svg width={radius} height={radius}>
+          <G x={radius / 2} y={radius / 2}>
             {componentesPorTipo.map((item, index) => {
               const sliceAngle = (item.cantidad / totalCantidad) * 360;
               const endAngle = startAngle + sliceAngle;
-
               const largeArcFlag = sliceAngle > 180 ? 1 : 0;
 
-              const x1 = radius * Math.cos((startAngle * Math.PI) / 180);
-              const y1 = radius * Math.sin((startAngle * Math.PI) / 180);
-              const x2 = radius * Math.cos((endAngle * Math.PI) / 180);
-              const y2 = radius * Math.sin((endAngle * Math.PI) / 180);
+              const x1 = (radius / 2) * Math.cos((startAngle * Math.PI) / 180);
+              const y1 = (radius / 2) * Math.sin((startAngle * Math.PI) / 180);
+              const x2 = (radius / 2) * Math.cos((endAngle * Math.PI) / 180);
+              const y2 = (radius / 2) * Math.sin((endAngle * Math.PI) / 180);
 
-              // Coordenadas para la etiqueta
+              const pathData = `
+          M 0 0 
+          L ${x1} ${y1} 
+          A ${radius / 2} ${radius / 2} 0 ${largeArcFlag} 1 ${x2} ${y2} 
+          Z
+        `;
+
+              // Calcular el ángulo medio para posicionar el porcentaje
               const midAngle = startAngle + sliceAngle / 2;
-              const labelX = (radius - strokeWidth - 15) * Math.cos((midAngle * Math.PI) / 180);
-              const labelY = (radius - strokeWidth - 15) * Math.sin((midAngle * Math.PI) / 180);
+              const percentX = (radius / 3) * Math.cos((midAngle * Math.PI) / 180);
+              const percentY = (radius / 3) * Math.sin((midAngle * Math.PI) / 180);
+
+              const percentage = ((item.cantidad / totalCantidad) * 100).toFixed(1);
 
               startAngle += sliceAngle;
 
               return (
-                <G key={index}>
-                  <Circle
-                    cx="0"
-                    cy="0"
-                    r={radius - strokeWidth / 2}
-                    stroke={generateBlueShade(index, componentesPorTipo.length)}
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    strokeDasharray={`${2 * Math.PI * (radius - strokeWidth / 2)} ${2 * Math.PI * (radius - strokeWidth / 2)}`}
-                    strokeDashoffset={-((startAngle - sliceAngle / 2) / 360) * 2 * Math.PI * (radius - strokeWidth / 2)}
+                <React.Fragment key={index}>
+                  <Path
+                    d={pathData}
+                    fill={generateBlueShade(index, componentesPorTipo.length)}
                   />
-                  {/* Etiqueta dentro del gráfico */}
+                  {/* Texto del porcentaje */}
                   <SvgText
-                    x={labelX}
-                    y={labelY}
+                    x={percentX}
+                    y={percentY}
+                    fontSize={10}
+                    fill="#000"
                     textAnchor="middle"
-                    alignmentBaseline="middle"
-                    fontSize={12}
-                    fill="#004B87"
                   >
-                    {`${item.tipo}: ${item.cantidad}`}
+                    {`${percentage}%`}
                   </SvgText>
-                </G>
+                </React.Fragment>
               );
             })}
           </G>
         </Svg>
+
+        {/* Leyenda a la derecha */}
+        <View style={[styles.legendContainer, { display: 'flex', marginLeft: 20 }]}>
+          {componentesPorTipo.map((item, index) => (
+            <View key={index} style={styles.legendItem}>
+              <View
+                style={[
+                  styles.colorBox,
+                  {
+                    backgroundColor: generateBlueShade(index, componentesPorTipo.length),
+                    borderRadius: 10, // Hace que sea circular
+                    width: 12,
+                    height: 12,
+                  },
+                ]}
+              />
+              <Text style={styles.legendText}>{`${item.tipo}: ${item.cantidad}`}</Text>
+            </View>
+          ))}
+        </View>
       </View>
-      <View style={styles.legendContainer}>
-        {componentesPorTipo.map((item, index) => (
-          <View key={index} style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: item.color }]} />
-            <Text style={styles.legendText}>{`${item.tipo}: ${item.cantidad}`}</Text>
-          </View>
-        ))}
-      </View>
+
 
       {/* Últimos Movimientos */}
       <View style={styles.movementsHeader}>
@@ -664,7 +825,10 @@ const styles = StyleSheet.create({
   graphPie: {
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
+    padding: 10,
   },
+
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
@@ -674,20 +838,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   legendContainer: {
-    display: 'none', // Ocultar la leyenda externa
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   colorBox: {
+    borderRadius: 10,
     width: 20,
     height: 20,
     marginRight: 10,
   },
   legendText: {
-    fontSize: 16,
+    fontSize: 14,
+    color: '#000',
   },
 
 });

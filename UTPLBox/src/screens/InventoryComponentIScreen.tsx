@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     View, Text, TextInput, Animated, Image, StyleSheet,
-    TouchableOpacity, FlatList, Modal, Dimensions,
+    TouchableOpacity, FlatList, Modal, Dimensions, Alert
 } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -10,6 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ItemData } from './ComponentsScreen'; // Ajusta la ruta según tu proyecto
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -19,7 +22,6 @@ const InventoryComponent = () => {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [selectedInventoryType, setSelectedInventoryType] = useState("Suministros de Oficina");
 
-
     const [isDrawerVisible, setDrawerVisible] = useState(false);
     const [drawerAnimation] = useState(new Animated.Value(width));
     const [modalVisible, setModalVisible] = useState(false);
@@ -28,29 +30,33 @@ const InventoryComponent = () => {
         React.useCallback(() => {
             setDrawerVisible(false);
             setModalVisible(false);
-            return () => {
-                // Aquí puedes realizar limpieza si es necesario
-                setDrawerVisible(false);
-                setModalVisible(false);
+            drawerAnimation.setValue(width);
+            const fetchSelectedComponent = async () => {
+                try {
+                    const storedItem = await AsyncStorage.getItem('selectedComponent');
+                    if (storedItem) {
+                        setItem(JSON.parse(storedItem));
+                    }
+                } catch (error) {
+                    console.error('Error al cargar el componente seleccionado:', error);
+                }
             };
+            setDrawerVisible(false);
+            setModalVisible(false);
+            drawerAnimation.setValue(width);
+            fetchSelectedComponent();
         }, [])
     );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            drawerAnimation.setValue(width); // Restablecer la posición inicial del drawer
-            return () => {
-                drawerAnimation.setValue(width); // Limpieza al salir
-            };
-        }, [])
-    );
-
+    
 
     const inventoryTypes = [
         "Suministros de Oficina",
         "Equipos y Mobiliarios",
-        "Material Educativo",
+        "Tecnología",
         "Material Deportivo",
+        "Limpieza y Seguridad",
+        "Libros y material Bibliográfico",
+        "Material Educativo",
     ];
 
     const movements = [
@@ -74,30 +80,39 @@ const InventoryComponent = () => {
 
     const navigation = useNavigation<NavigationProps>();// Usar el hook para acceder a la navegación
 
-    // Example function to fetch data
-    const getItemDetails = () => {
-        return {
-            name: "Marcadores Líquidos",
+    const [item, setItem] = useState<ItemData | null>(null);
 
-            imageUrl: require('../assets/example/markers.png'), // Replace with your image URL
-            barcode: "LAF231DSA",
-            inventoryType: "Suministros de Oficina",
-            description:
-                "Instrumentos de escritura que contienen tinta a base de agua o alcohol, y su punta, generalmente de fieltro, permite trazos suaves y fluidos en diversas superficies. Son utilizados comúnmente para escribir en pizarras blancas o superficies no porosas.",
-            inventoryCount: 50,
-        };
-    };
-
-    const item = getItemDetails();
-
-    const [description, setDescription] = useState(item.description);
+    const [description, setDescription] = useState(item?.description);
 
 
     // Inicializar el estado de la descripción con el valor inicial del item
     useEffect(() => {
-        setDescription(item.description);
-    }, [item.description]); // Esto asegura que se actualice si `item.description` cambia
+        setDescription(item?.description);
+    }, [item?.description]); // Esto asegura que se actualice si `item.description` cambia
 
+
+    useEffect(() => {
+        const fetchSelectedComponent = async () => {
+            try {
+                const storedItem = await AsyncStorage.getItem('selectedComponent');
+                if (storedItem) {
+                    setItem(JSON.parse(storedItem));
+                }
+            } catch (error) {
+                console.error('Error al cargar el componente seleccionado:', error);
+            }
+        };
+
+        fetchSelectedComponent();
+    }, []);
+
+    if (!item) {
+        return (
+            <View style={styles.container}>
+                <Text>Cargando datos...</Text>
+            </View>
+        );
+    }
 
 
     const toggleDropdown = () => {
@@ -128,11 +143,42 @@ const InventoryComponent = () => {
         }
     };
 
-    const handleSaveChanges = () => {
-        // Mostrar la ventana emergente
-        setModalVisible(true);
-
+    const handleSaveChanges = async () => {
+        try {
+            // Validar que no se retire más de la cantidad disponible
+            if (removeCount > item!.quantity) {
+                Alert.alert(`No puedes retirar más de ${item!.quantity} unidades.`);
+                return;
+            }
+    
+            // Calcular la nueva cantidad
+            const newQuantity = item!.quantity + addCount - removeCount;
+    
+            // Actualizar el estado local del componente
+            const updatedItem = { ...item!, quantity: newQuantity };
+            setItem(updatedItem);
+    
+            // Actualizar los datos en AsyncStorage
+            const storedData = await AsyncStorage.getItem('components');
+            let components = storedData ? JSON.parse(storedData) : [];
+    
+            components = components.map((comp: ItemData) =>
+                comp.id === item!.id ? updatedItem : comp
+            );
+    
+            await AsyncStorage.setItem('components', JSON.stringify(components));
+    
+            // Resetear los contadores de agregar y retirar
+            setAddCount(0);
+            setRemoveCount(0);
+    
+            // Mostrar el modal de confirmación
+            setModalVisible(true);
+        } catch (error) {
+            console.error('Error al guardar los cambios:', error);
+        }
     };
+    
 
     const handleModalClose = () => {
         setModalVisible(false);
@@ -141,6 +187,30 @@ const InventoryComponent = () => {
         }, 300); // Agrega un pequeño retraso para evitar problemas al navegar
     };
 
+    // Manejar cambios en "Desea agregar" (escritura directa o botones)
+    const handleAddChange = (value: string) => {
+        const newAddCount = Math.max(0, parseInt(value) || 0);
+        const newRemoveCount = Math.max(0, removeCount - (newAddCount - addCount)); // Ajustar "Retirar"
+        setAddCount(newAddCount);
+        setRemoveCount(newRemoveCount);
+    };
+
+    // Manejar cambios en "Desea retirar" (escritura directa o botones)
+    const handleRemoveChange = (value: string) => {
+        const newRemoveCount = Math.min(
+            Math.max(0, parseInt(value) || 0),
+            item!.quantity
+        );
+        const newAddCount = Math.max(0, addCount - (newRemoveCount - removeCount)); // Ajustar "Agregar"
+        setRemoveCount(newRemoveCount);
+        setAddCount(newAddCount);
+    };
+
+    // Lógica para incrementar y decrementar
+    const handleAddIncrease = () => handleAddChange((addCount + 1).toString());
+    const handleAddDecrease = () => handleAddChange((addCount - 1).toString());
+    const handleRemoveIncrease = () => handleRemoveChange((removeCount + 1).toString());
+    const handleRemoveDecrease = () => handleRemoveChange((removeCount - 1).toString());
 
 
     return (
@@ -157,10 +227,10 @@ const InventoryComponent = () => {
                 </View>
                 <Text style={styles.title}>{item.name}</Text>
 
-                <Image source={item.imageUrl} style={styles.image} />
+                <Image source={{ uri: item.image }} style={styles.image} />
 
                 <Text style={styles.subtitle}>Cantidad en el Inventario</Text>
-                <Text style={styles.inventoryCount}>{item.inventoryCount}</Text>
+                <Text style={styles.inventoryCount}>{item.quantity}</Text>
 
                 <View style={styles.row}>
                     <Text style={styles.label}>Código de Barras</Text>
@@ -180,7 +250,7 @@ const InventoryComponent = () => {
                         <View style={styles.counterRow}>
                             <TouchableOpacity
                                 style={styles.counterButton}
-                                onPress={() => setAddCount(addCount + 1)}
+                                onPress={handleAddIncrease}
                             >
                                 <Text style={styles.counterButtonText}>+</Text>
                             </TouchableOpacity>
@@ -188,11 +258,11 @@ const InventoryComponent = () => {
                                 style={styles.counterValue}
                                 keyboardType="numeric"
                                 value={addCount.toString()}
-                                onChangeText={(text) => setAddCount(Math.max(0, parseInt(text) || 0))}
+                                onChangeText={handleAddChange}
                             />
                             <TouchableOpacity
                                 style={styles.counterButton}
-                                onPress={() => setAddCount(Math.max(0, addCount - 1))}
+                                onPress={handleAddDecrease}
                             >
                                 <Text style={styles.counterButtonText}>-</Text>
                             </TouchableOpacity>
@@ -204,7 +274,7 @@ const InventoryComponent = () => {
                         <View style={styles.counterRow}>
                             <TouchableOpacity
                                 style={styles.counterButton}
-                                onPress={() => setRemoveCount(removeCount + 1)}
+                                onPress={handleRemoveIncrease}
                             >
                                 <Text style={styles.counterButtonText}>+</Text>
                             </TouchableOpacity>
@@ -212,11 +282,11 @@ const InventoryComponent = () => {
                                 style={styles.counterValue}
                                 keyboardType="numeric"
                                 value={removeCount.toString()}
-                                onChangeText={(text) => setRemoveCount(Math.max(0, parseInt(text) || 0))}
+                                onChangeText={handleRemoveChange}
                             />
                             <TouchableOpacity
                                 style={styles.counterButton}
-                                onPress={() => setRemoveCount(Math.max(0, removeCount - 1))}
+                                onPress={handleRemoveDecrease}
                             >
                                 <Text style={styles.counterButtonText}>-</Text>
                             </TouchableOpacity>
@@ -253,7 +323,11 @@ const InventoryComponent = () => {
                         multiline
                         editable={true}
                         value={item.description}
-                        onChangeText={setDescription}
+                        onChangeText={(text) =>
+                            setItem((prev: ItemData | null) =>
+                                prev ? { ...prev, description: text } : null
+                            )
+                        }
                     />
                 </View>
 
@@ -537,6 +611,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         marginBottom: 10,
+        paddingVertical: 20,
     },
     movementText: {
         marginLeft: 10,

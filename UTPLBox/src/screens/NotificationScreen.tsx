@@ -1,75 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useBarcode } from './BarcodeContext/BarcodeContext';
 
 // Define el tipo de parámetros del Drawer Navigator
 type DrawerParamList = {
-    NotiReport: undefined;
+    NotiReport: { componente: Componente };
 };
 
 // Tipar el hook de navegación
 type NavigationProps = DrawerNavigationProp<DrawerParamList>;
 
 // Define el tipo de los componentes
-type Componente = {
+export type Componente = {
     id: string;
     nombre: string;
     cantidad: number;
     limite: number;
-    estado: 'Bien' | 'Defectuoso';
+    estado: 'Perfecto Estado' | 'Buen Estado (Usado)' | 'Defectuoso' | 'Obsoleto';
     codigo?: string; // Opcional, solo para los componentes defectuosos
     fecha: string; // Fecha en formato YYYY-MM-DD
     hora: string; // Hora en formato HH:mm
+    descripcion: string;
+    image: string;
 };
 
-// Datos quemados
-const componentes: Componente[] = [
-    {
-        id: '1',
-        nombre: 'Hojas',
-        cantidad: 30,
-        limite: 50,
-        estado: 'Bien',
-        fecha: '2025-01-14',
-        hora: '07:30',
-    },
-    {
-        id: '2',
-        nombre: 'Extintores',
-        cantidad: 10,
-        limite: 20,
-        estado: 'Defectuoso',
-        fecha: '2025-01-14',
-        hora: '17:45',
-    },
-    {
-        id: '3',
-        nombre: 'Mesa',
-        cantidad: 5,
-        limite: 50,
-        estado: 'Defectuoso',
-        codigo: 'L213AS21',
-        fecha: '2025-01-13',
-        hora: '12:00',
-    },
-    {
-        id: '4',
-        nombre: 'Bolígrafos',
-        cantidad: 5,
-        limite: 10,
-        estado: 'Bien',
-        fecha: '2025-01-12',
-        hora: '09:00',
-    },
-];
 
 // Función para determinar el mensaje basado en la cantidad y el límite
 const getMensajeEstado = (componente: Componente): string => {
-    if (componente.estado === 'Defectuoso') {
-        return `El componente ${componente.nombre} (${componente.codigo}) ha sido catalogado como defectuoso`;
+    if (componente.estado === 'Defectuoso' || componente.estado === 'Obsoleto') {
+        return `El componente ${componente.nombre} (${componente.codigo}) ha sido catalogado como ${componente.estado}`;
     }
 
     if (componente.cantidad < componente.limite) {
@@ -99,20 +62,21 @@ const getDescripcionFecha = (fecha: string, hora: string): string => {
     }
 };
 
-export default function App() {
+export default function NotificationScreen() {
     const navigation = useNavigation<NavigationProps>(); // Usar el hook para acceder a la navegación
+    const { componentesVerificados } = useBarcode();
 
     // Renderizar cada elemento de la lista
     const renderItem = ({ item }: { item: Componente }) => {
         const mensaje = getMensajeEstado(item);
-        const isDefectuoso = item.estado === 'Defectuoso';
+        const isDefectuoso = item.estado === 'Defectuoso' || item.estado === 'Obsoleto';
         const descripcionFecha = getDescripcionFecha(item.fecha, item.hora);
 
         return (
             <TouchableOpacity
                 style={[styles.notificacion, isDefectuoso && styles.defectuoso]}
                 disabled={!isDefectuoso}
-                onPress={isDefectuoso ? () => navigation.navigate('NotiReport') : undefined}
+                onPress={isDefectuoso ? () => navigation.navigate('NotiReport', { componente: item }) : undefined}
             >
                 <View style={styles.iconContainer}>
                     {isDefectuoso ? (
@@ -138,7 +102,7 @@ export default function App() {
                 <Text style={styles.title}>Notificaciones</Text>
             </View>
             <FlatList
-                data={componentes}
+                data={componentesVerificados}
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 contentContainerStyle={styles.list}

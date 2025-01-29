@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
     StyleSheet, View, Text, TextInput, FlatList, TouchableOpacity,
-    Image, Modal, Animated, Easing, Dimensions
+    Image, Animated, Easing, Dimensions
 } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get("window");
 
@@ -14,7 +15,7 @@ const { width, height } = Dimensions.get("window");
 type DrawerParamList = {
     Home: undefined;
     History: undefined;
-    InvComponent: undefined;
+    InvComponent: { itemId: string }; // Se espera un parámetro itemId
     Barcode: undefined;
 };
 
@@ -22,43 +23,54 @@ type DrawerParamList = {
 type NavigationProps = DrawerNavigationProp<DrawerParamList>;
 
 
-interface ItemData {
+export interface ItemData {
     id: string;
     name: string;
     quantity: number;
-    category: string | string[];
+    category: string;
     icon: string;
+    image: string;
+    description: string;
+    barcode: string
 }
-/* ['Todos', 'Suministros de oficina', 'Equipos y mobiliario', 'Tecnología', 
-    'Material Deportivo', 'Limpieza y Seguridad', 'Libros y material Bibliográfico'] */
-
-// Función para generar los datos iniciales
-const generateData = (): ItemData[] => {
-    return [
-        { id: '1', name: 'Marcadores Líquidos', quantity: 50, category: 'Suministros de oficina', icon: 'markers' },
-        { id: '2', name: 'Extintores', quantity: 12, category: ['Equipos', 'Limpieza y Seguridad'], icon: 'extinguisher' },
-        { id: '3', name: 'Tablets', quantity: 4, category: 'Tecnología', icon: 'tablet' },
-        { id: '4', name: 'Balones de Fútbol', quantity: 20, category: 'Material Deportivo', icon: 'ball' },
-    ];
-};
-
-// Animaciones
 
 
 export default function App() {
     const navigation = useNavigation<NavigationProps>();// Usar el hook para acceder a la navegación
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(['Todos']);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
-    const [data, setData] = useState<ItemData[]>(generateData());
+    const [data, setData] = useState<ItemData[]>([])
     const [search, setSearch] = useState<string>('');
     const [expandedItems, setExpandedItems] = useState<string[]>([]);
     const animatedHeights = useRef<{ [key: string]: Animated.Value }>({}).current;
 
     useFocusEffect(
         React.useCallback(() => {
-            // Cuando la pantalla gana el foco
-            return () => {
+            const loadComponents = async () => {
+                try {
+                    const storedData = await AsyncStorage.getItem('components');
+                    const components = storedData ? JSON.parse(storedData) : [];
+    
+                    // Mapea las propiedades al formato esperado
+                    const mappedComponents = components.map((item: any) => ({
+                        id: item.id,
+                        name: item.name, // Mapea componentName a name
+                        description: item.description, // Asegura que se pase correctamente
+                        quantity: item.quantity,
+                        category: item.category, // Mapea inventoryType a category
+                        image: item.image, // Conserva la propiedad image
+                        barcode: item.barcode,
+                    }));
+    
+                    setData(mappedComponents);
+                } catch (error) {
+                    console.error('Error al cargar los datos:', error);
+                }
+            };
+    
+            loadComponents();
+             return () => {
                 // Cuando la pantalla pierde el foco
                 setModalVisible(false);
             };
@@ -75,7 +87,10 @@ export default function App() {
 
     // Filtrar datos basados en múltiples categorías seleccionadas
     const filteredData = data.filter(item => {
-        // Convertimos `category` en un array para manejar ambos casos: string o string[]
+
+        const name = item.name || ''; 
+        const searchText = search || ''; 
+
         const categories = Array.isArray(item.category) ? item.category : [item.category];
 
         // Verificamos si se debe incluir el elemento basado en los filtros seleccionados
@@ -85,7 +100,7 @@ export default function App() {
             selectedCategories.some(category => categories.includes(category));
 
         // Verificamos si el nombre coincide con la búsqueda
-        const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = name.toLowerCase().includes(searchText.toLowerCase());
 
         // El elemento debe coincidir con ambas condiciones
         return matchesCategory && matchesSearch;
@@ -221,14 +236,22 @@ export default function App() {
 
     // Renderizar cada elemento de la lista
     const renderItem = ({ item }: { item: ItemData }) => {
-        const imageSource = imageMap[item.icon];
-        // usar carga remota de imagenes para la insercion
 
         return (
             <View style={styles.card}>
-                <TouchableOpacity onPress={() => navigation.navigate('InvComponent')}>
+                <TouchableOpacity onPress={ async () => {
+                try {
+                    // Guarda el componente seleccionado en AsyncStorage
+                    await AsyncStorage.setItem('selectedComponent', JSON.stringify(item));
+                    // Navega a la pantalla InventoryComponent
+                    navigation.navigate('InvComponent', { itemId: item.id });
+                } catch (error) {
+                    console.error('Error al guardar el componente seleccionado:', error);
+                }
+            }}
+            >
                     <View style={styles.cardContent}>
-                        <Image source={imageSource} style={styles.image} />
+                    <Image source={{ uri: item.image }} style={styles.image} />
                         <View style={styles.textContainer}>
                             <Text style={styles.itemName}>{item.name}</Text>
                             <Text style={styles.itemQuantity}>Cantidad: {item.quantity}</Text>
@@ -242,7 +265,7 @@ export default function App() {
                 {expandedItems.includes(item.id) && (
                     <View style={styles.expandedContent}>
                         <Text style={styles.description}>
-                            Información detallada sobre {item.name}. Esta sección se puede personalizar según los datos disponibles.
+                        {item.description}
                         </Text>
                     </View>
                 )}
@@ -311,9 +334,11 @@ export default function App() {
                             { transform: [{ translateY: filterModalPosition }] },
                         ]}
                     >
-                        <Text style={styles.modalTitle}>TIPO DE INVENTARIO</Text>
+                        <Text style={styles.modalTitle2}>TIPO DE INVENTARIO</Text>
                         <View style={styles.filterButtons}>
-                            {['Todos', 'Suministros de oficina', 'Equipos y mobiliario', 'Tecnología', 'Material Deportivo', 'Limpieza y Seguridad', 'Libros y material Bibliográfico'].map(category => (
+                            {['Todos', 'Suministros de Oficina', 'Equipos y Mobiliarios', 'Tecnología', 
+                            'Material Deportivo', 'Limpieza y Seguridad', 
+                            'Libros y material Bibliográfico', 'Material Educativo'].map(category => (
                                 <TouchableOpacity
                                     key={category}
                                     style={[
@@ -447,6 +472,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         zIndex: 2,
     },
+    modalTitle2: {
+        paddingTop: 50,
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#004270",
+        marginBottom: 10,
+        justifyContent: "flex-start",
+        textAlign: "left",
+    },
     modalTitle: {
         paddingTop: 20,
         fontSize: 18,
@@ -554,7 +588,6 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 5,
     },
     overlayTouchable: {
         flex: 1
@@ -566,7 +599,6 @@ const styles = StyleSheet.create({
         right: 0,
         backgroundColor: 'white',
         padding: 20,
-        alignItems: 'center',
         zIndex: 2,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
@@ -579,9 +611,10 @@ const styles = StyleSheet.create({
     },
     filterButton: {
         padding: 10,
+        paddingHorizontal: 10,
         borderWidth: 1,
         borderColor: '#ccc',
-        borderRadius: 20,
+        borderRadius: 10,
         margin: 5,
         backgroundColor: "#f1e1a5",
         fontWeight: "bold",

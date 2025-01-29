@@ -9,6 +9,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useRoute } from '@react-navigation/native';
+import { Componente } from './NotificationScreen';
+import { Componente as Componente2} from './VerifyStateComponentScreen';
+import { FlatList } from 'react-native-gesture-handler';
+
 
 // Define el tipo de parámetros del Drawer Navigator
 type DrawerParamList = {
@@ -18,16 +23,20 @@ type DrawerParamList = {
 // Tipar el hook de navegación
 type NavigationProps = DrawerNavigationProp<DrawerParamList>;
 
+
 export default function InformeEstado() {
     const navigation = useNavigation<NavigationProps>();
 
+    const route = useRoute();
+    const { componente } = route.params as { componente: Componente };
+
     // Funciones para obtener los datos
-    const getCodigoBarra = () => 'L213AS21';
-    const getCantidad = () => '01';
-    const getEstado = () => 'Defectuoso';
-    const getFecha = () => '27/11/2024';
-    const getObservaciones = () =>
-        'Se encontró la mesa botada con la parte de arriba separada de la parte inferior de la misma';
+    const getCodigoBarra = () => componente.codigo || 'N/A';
+    const getCantidad = () => componente.cantidad.toString();
+    const getEstado = () => componente.estado;
+    const getFecha = () => componente.fecha;
+    const getImage = JSON.parse(componente.image); 
+    const getObservaciones = () => componente.descripcion;
 
     return (
         <View style={styles.container}>
@@ -40,7 +49,7 @@ export default function InformeEstado() {
             </View>
 
             {/* Título del componente */}
-            <Text style={styles.subTitle}>Mesa Circular</Text>
+            <Text style={styles.subTitle}>{componente.nombre}</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 {/* Información general */}
@@ -67,11 +76,18 @@ export default function InformeEstado() {
                 {/* Evidencia */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Evidencia</Text>
-                    <Image
-                        source={require('../assets/example/tablet.png')} // Reemplaza esta ruta con la correcta para tu imagen
-                        style={styles.evidenceImage}
-                        resizeMode="cover"
-                    />
+                    <FlatList 
+                    data={getImage} // Pasa las imágenes como data
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <Image
+                            source={{ uri: item }} // Asegura que cada imagen sea usada como source
+                            style={styles.evidenceImage}
+                            resizeMode="cover"
+                        />
+                    )}
+                    scrollEnabled={false}
+                />
                 </View>
 
                 {/* Observaciones */}
@@ -154,6 +170,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 200,
         borderRadius: 8,
+        marginVertical: 7,
     },
     observationsContainer: {
         backgroundColor: '#FFFFFF',

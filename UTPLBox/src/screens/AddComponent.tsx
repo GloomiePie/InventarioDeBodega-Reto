@@ -20,6 +20,7 @@ import { useBarcode } from './BarcodeContext/BarcodeContext'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define el tipo de parámetros del Drawer Navigator
 type DrawerParamList = {
@@ -77,8 +78,11 @@ export function AddComponentScreen() {
     const inventoryTypes = [
         "Suministros de Oficina",
         "Equipos y Mobiliarios",
-        "Material Educativo",
+        "Tecnología",
         "Material Deportivo",
+        "Limpieza y Seguridad",
+        "Libros y material Bibliográfico",
+        "Material Educativo",
     ];
 
 
@@ -95,7 +99,7 @@ export function AddComponentScreen() {
         return description.trim() || 'Sin descripción';
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (
             !componentName.trim() ||
             !barcode.trim() ||
@@ -109,16 +113,32 @@ export function AddComponentScreen() {
         }
 
         const processedData = {
+            id: new Date().toISOString(),
             barcode: processBarcode(barcode),
             quantity: processQuantity(quantity),
-            componentName: componentName.trim(),
-            inventoryType: selectedInventoryType,
+            name: componentName.trim(),
+            category: selectedInventoryType,
             description: processDescription(description),
             image: selectedImage,
         };
 
-        console.log('Datos procesados:', processedData);
-        setModalVisible(true); // Abre el modal
+        try {
+            // Obtener la lista existente
+            const existingData = await AsyncStorage.getItem('components');
+            const components = existingData ? JSON.parse(existingData) : [];
+    
+            // Agregar el nuevo componente
+            const updatedComponents = [...components, processedData];
+    
+            // Guardar en AsyncStorage
+            await AsyncStorage.setItem('components', JSON.stringify(updatedComponents));
+    
+            console.log('Datos procesados y guardados:', processedData);
+            setModalVisible(true); // Abre el modal
+        } catch (error) {
+            console.error('Error al guardar los datos:', error);
+            Alert.alert('Error', 'No se pudo guardar el componente. Intente nuevamente.');
+        }
     };
 
 
