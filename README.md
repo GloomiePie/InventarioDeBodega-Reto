@@ -42,20 +42,3 @@ Desarrollar un **aplicativo móvil** para gestionar el inventario de la bodega d
   <div align="center">
   <img src="https://i.postimg.cc/15TSMK2v/qr.png" alt="qr" width="300"/>
   </div>
-  
-## Tecnologías y Herramientas
-
-- **React**: Biblioteca Javascript de código abierto diseñada para crear interfaces de usuario.
-  <div align="center">
-  <img src="https://github.com/user-attachments/assets/9cd06eed-ac5e-4216-99da-6479599ed724" alt="React Logo" width="150"/>
-  </div>
-  
-- **Firebase**: Plataforma en la nube para backend, gestión de bases de datos en tiempo real y autenticación de usuarios.
-  <div align="center">
-  <img src="https://github.com/user-attachments/assets/26e8ff7e-e33d-40a8-9c1e-86bfb16bcfd0" width="150"/>
-  </div>
-  
-- **Android Studio**: Entorno de desarrollo integrado (IDE) para Flutter.
-  <div align="center">
-  <img src="https://i.postimg.cc/G2qwDPvJ/Android-Studilogo.png" alt="Android Studio Logo" width="150"/>
-  </div>
