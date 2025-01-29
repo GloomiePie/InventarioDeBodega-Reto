@@ -4,7 +4,7 @@
 
 <p align="center"><strong>CLOUDCORE</strong></p>
 
-![pixelcut-export](https://github.com/user-attachments/assets/e80f329e-1997-4f6e-a1cc-0ba2f07aa53b)
+<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/HnFLxdF8/pixelcut-export.png' border='0' alt='pixelcut-export' width=150/></a>
 
 ## ¿Quiénes Somos?
 
