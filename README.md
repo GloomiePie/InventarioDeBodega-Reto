@@ -4,7 +4,11 @@
 
 <p align="center"><strong>CLOUDCORE</strong></p>
 
-<a href='https://postimages.org/' target='_blank'><img src='https://i.postimg.cc/HnFLxdF8/pixelcut-export.png' border='0' alt='pixelcut-export' width=150/></a>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c99d9810-07e7-47d1-ac28-b22a89f29a7b" alt="Logo UTPL" width="200"/>
+</p>
+
+
 
 ## ¿Quiénes Somos?
 
