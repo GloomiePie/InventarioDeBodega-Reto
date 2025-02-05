@@ -107,7 +107,7 @@ const CustomDrawerContent = (props: any) => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.drawerCont}>
       <View style={styles.profileSection}>
         <Image
           source={{ uri: 'https://via.placeholder.com/80' }}
@@ -221,6 +221,10 @@ const DrawerNavigator: React.FC = () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         headerShown: false,
+        drawerStyle: {
+          position: 'absolute',
+          zIndex: 10000,
+        }
       }}
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
@@ -243,6 +247,25 @@ const DrawerNavigator: React.FC = () => {
   );
 };
 
+const CustomNavbar = ({ navigation }: any) => {
+  return (
+    <View style={styles.navbar}>
+      <TouchableOpacity onPress={() => navigation.navigate('Drawer', { screen: 'Home' })} style={styles.navItem}>
+        <Feather name="home" size={28} color="#004170" />
+        <Text style={styles.navText}>Inicio</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Drawer', { screen: 'Components' })} style={styles.navItem}>
+        <FontAwesome6 name="boxes-stacked" size={28} color="#004170" />
+        <Text style={styles.navText}>Componentes</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Drawer', { screen: 'Noti' })} style={styles.navItem}>
+        <MaterialCommunityIcons name="bell" size={28} color="#004170" />
+        <Text style={styles.navText}>Notificaciones</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <BarcodeProvider>
@@ -250,7 +273,17 @@ const App: React.FC = () => {
         <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="RecoverPassword" component={RecoverPasswordScreen} />
-          <Stack.Screen name="Drawer" component={DrawerNavigator} />
+          <Stack.Screen name="Drawer">
+          {({ navigation }) => (
+            <View style={{ flex: 1 }}>
+              <DrawerNavigator />
+              <CustomNavbar navigation={navigation} />
+              
+            </View>
+            
+          )}
+          
+        </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </BarcodeProvider>
@@ -329,7 +362,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   modalContent: {
-    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
@@ -394,4 +426,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  navbar: {
+    position: 'relative',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    zIndex: 1,
+  },
+  navItem: {
+    alignItems: 'center',
+  },
+  navText: {
+    fontSize: 12,
+    color: '#004170',
+  },
+  drawerCont: {
+    flex: 1,
+    zIndex: 2,
+  }
 });
