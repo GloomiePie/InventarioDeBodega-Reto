@@ -21,8 +21,7 @@ CLOUDCORE es una empresa especializada en soluciones de computación en la nube,
 ---
 
 ## Integrantes y Roles en el Proyecto
-
-![Integrantes](https://github.com/user-attachments/assets/fd724497-3083-49e8-b282-b6ac7b91d043)
+![equipo de trabajo](https://github.com/user-attachments/assets/0865ffa8-0a44-48f5-85df-26cab6b20388)
 
 # Reto: Inventario de Bodega - Universidad Técnica Particular de Loja (UTPL)
 
